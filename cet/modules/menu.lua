@@ -173,12 +173,12 @@ function menu.setup()
 
   nativeSettings.addSwitch(
     settingsSubcategory,
-    settings.persistWalkingState.label,
-    settings.persistWalkingState.description,
-    settings.persistWalkingState.value,
-    settings.persistWalkingState.defaultValue,
+    settings.persistSystem.label,
+    settings.persistSystem.description,
+    settings.persistSystem.value,
+    settings.persistSystem.defaultValue,
     function(value)
-      settings.persistWalkingState.value = value
+      settings.persistSystem.value = value
     end
   )
 

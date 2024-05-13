@@ -108,11 +108,11 @@ settings.crouchSpeed = {
   tweakDBKey = "PlayerLocomotion.player_locomotion_data_Crouch_inline1.value",
 }
 
-settings.persistWalkingState = {
+settings.persistSystem = {
   value = true,
   description =
-  "In vanilla Cyberpunk, after sprinting, the game will force de-toggle the walking state, setting the player to the default jogging state after sprinting even if the walking state was toggled prior to running. Enable this option will make the player's state persist after sprinting.\n\nMeaning if you were in the walking state before sprinting, you'll go back to the walking state after sprinting. Of course, if you were jogging, you'll continue to jog after sprinting.",
-  label = "Persist Walking State",
+  "Prevents the game from disabling the walking state.\n\nIn vanilla Cyberpunk, various actions will force disable the walking state, such as sprinting or entering combat. Enabling this option will prevent the game from disabling this state, allowing you to persist in the walking state permanently.",
+  label = "Persist System",
   defaultValue = true,
 }
 
