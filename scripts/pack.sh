@@ -18,4 +18,4 @@ mkdir -p "${paths[REDSCRIPT_PATH]}"
 cp -r "${paths[ROOT]}/redscript/" "${paths[ROOT]}/install/${paths[REDSCRIPT_PATH]}/${paths[NAME]}"
 
 # Zip the install directory.
-7z a -tzip "${paths[NAME]}.zip" "${paths[ROOT]}/install"
+7z a -tzip "${paths[NAME]}.zip" *
