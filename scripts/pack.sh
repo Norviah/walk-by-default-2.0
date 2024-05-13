@@ -1,7 +1,7 @@
 source "$(git rev-parse --show-toplevel)/scripts/paths.sh"
 
 # Import the mod if it hasn't been imported yet.
-if [ ! -f "${paths[ROOT]}/cet" ] || [ ! -f "${paths[ROOT]}/redscript" ]; then
+if [ ! -d "${paths[ROOT]}/cet" ] || [ ! -d "${paths[ROOT]}/redscript" ]; then
   source "${paths[ROOT]}/scripts/import.sh"
 fi
 
