@@ -57,4 +57,5 @@ function PushToTweakDB()
   TweakDB:SetFlat(settings.sprintingSpeed.tweakDBKey, settings.sprintingSpeed.value)
   TweakDB:SetFlat(settings.walkingSpeed.tweakDBKey, settings.walkingSpeed.value)
   TweakDB:SetFlat(settings.joggingSpeed.tweakDBKey, settings.joggingSpeed.value)
+  TweakDB:SetFlat(settings.crouchSpeed.tweakDBKey, settings.crouchSpeed.value)
 end

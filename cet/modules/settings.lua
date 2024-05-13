@@ -77,7 +77,7 @@ settings.walkingSpeed = {
 
 settings.joggingSpeed = {
   value = 1.5,
-  description = "The default movement for the player when loading into the game (vanilla value is 3.5).",
+  description = "The default movement speed for the player when loading into the game (vanilla value is 3.5).",
   label = "Jogging Speed",
   defaultValue = 1.5,
   min = 0,
@@ -95,6 +95,17 @@ settings.sprintingSpeed = {
   max = 30.0,
   step = 0.1,
   tweakDBKey = "PlayerLocomotion.player_locomotion_data_Sprint_inline1.value",
+}
+
+settings.crouchSpeed = {
+  value = 1.5,
+  description = "The movement speed for the player when crouching (vanilla value is 1.5).",
+  label = "Crouch Speed",
+  defaultValue = 1.5,
+  min = 0,
+  max = 30.0,
+  step = 0.1,
+  tweakDBKey = "PlayerLocomotion.player_locomotion_data_Crouch_inline1.value",
 }
 
 settings.persistWalkingState = {
