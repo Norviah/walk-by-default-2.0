@@ -1,3 +1,9 @@
+## [v1.5.0](https://github.com/Norviah/walk-by-default-2.0/compare/v1.5.0-rc2...v1.5.0) (2024-05-14)
+
+### Features
+
+- **cet**: ensure the user is not in a vehicle before toggling the walk state <code>[ae63a55](https://github.com/Norviah/walk-by-default-2.0/commit/ae63a55cd75306f9c67a518bed9370e0df8edcd8)</code>
+
 ## [v1.5.0-rc2](https://github.com/Norviah/walk-by-default-2.0/compare/v1.5.0-rc1...v1.5.0-rc2) (2024-05-13)
 
 ### Bug Fixes
