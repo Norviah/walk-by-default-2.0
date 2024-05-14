@@ -88,6 +88,14 @@ local function addNativeSettingsBinding(nativeSettingsPath, info, updateCallback
   end
 end
 
+local function ToggleWalkInput()
+  local inVehicle = VehicleComponent.IsMountedToVehicle(Game.GetPlayer())
+
+  if not inVehicle then
+    Game.GetPlayer():ProcessToggleWalkInput()
+  end
+end
+
 function menu.setup()
   local nativeSettings = GetMod("nativeSettings")
 
@@ -193,9 +201,7 @@ function menu.setup()
     function(name, value)
       settings.keyboardBind.value[name] = value
     end,
-    function()
-      Game.GetPlayer():ProcessToggleWalkInput()
-    end
+    ToggleWalkInput
   )
 
 
@@ -210,9 +216,7 @@ function menu.setup()
     function(name, value)
       settings.gamepadBind.value[name] = value
     end,
-    function()
-      Game.GetPlayer():ProcessToggleWalkInput()
-    end
+    ToggleWalkInput
   )
 end
 
