@@ -7,4 +7,4 @@ cp -r "${paths[CYBERPUNK_ROOT]}/${paths[CET_PATH]}/${paths[NAME]}/" "${paths[ROO
 cp -r "${paths[CYBERPUNK_ROOT]}/${paths[REDSCRIPT_PATH]}/${paths[NAME]}/" "${paths[ROOT]}/redscript"
 
 cd "${paths[ROOT]}/cet"
-rm *.sqlite3 *.log
+rm *.sqlite3 *.log data/*.json
