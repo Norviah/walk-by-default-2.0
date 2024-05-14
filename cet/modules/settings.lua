@@ -64,11 +64,11 @@ settings.gamepadBind = {
 }
 
 settings.walkingSpeed = {
-  value = 3.5,
+  value = 4.0,
   description =
   "The movement speed for the player when the walking state is toggled using the 'Toggle Walk' button (vanilla value is 1.5).",
   label = "Walking Speed",
-  defaultValue = 3.5,
+  defaultValue = 4.0,
   min = 0,
   max = 30.0,
   step = 0.1,
