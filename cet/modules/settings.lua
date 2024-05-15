@@ -116,4 +116,12 @@ settings.persistSystem = {
   defaultValue = true,
 }
 
+settings.toggleWalkingStateWithCombat = {
+  value = false,
+  description =
+  "Toggles the walking state according to when the player enters or leaves combat.\n\nIf the movement speed for the walking state is slow, it could get annoying entering combat and walking a snail's pace, if this option is enabled, the walking state is force disabled when entering combat and re-enabled when leaving combat.",
+  label = "Toggle Walking State With Combat",
+  defaultValue = false,
+}
+
 return settings

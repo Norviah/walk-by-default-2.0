@@ -190,6 +190,17 @@ function menu.setup()
     end
   )
 
+  nativeSettings.addSwitch(
+    settingsSubcategory,
+    settings.toggleWalkingStateWithCombat.label,
+    settings.toggleWalkingStateWithCombat.description,
+    settings.toggleWalkingStateWithCombat.value,
+    settings.toggleWalkingStateWithCombat.defaultValue,
+    function(value)
+      settings.toggleWalkingStateWithCombat.value = value
+    end
+  )
+
   -- Keyboard
 
   local keyboardSubcategory = path .. "/keyboard"

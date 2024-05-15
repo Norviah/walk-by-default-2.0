@@ -61,9 +61,15 @@ Override("PlayerPuppet", "OnCombatStateChanged", function(self, newState, wrappe
       bboard:SetFloat(GetAllBlackboardDefs().PlayerPerkData.CombatStateTime, combatTimeStamp, true);
     end
 
-    if not settings.persistSystem.value then
+    if settings.toggleWalkingStateWithCombat.value or not settings.persistSystem.value then
       local psmEvent = PSMPostponedParameterBool:new();
-      psmEvent.id = CName("ForceDisableToggleWalk")
+
+      if settings.toggleWalkingStateWithCombat.value and not inCombat then
+        psmEvent.id = CName("ToggleWalkInputRegistered")
+      else
+        psmEvent.id = CName("ForceDisableToggleWalk")
+      end
+
       psmEvent.aspect = gamestateMachineParameterAspect.Permanent;
       psmEvent.value = true;
       self:QueueEvent(psmEvent);
