@@ -1,3 +1,9 @@
+## [v1.6.1](https://github.com/Norviah/walk-by-default-2.0/compare/v1.6.0...v1.6.1) (2024-05-15)
+
+### Build System
+
+- add dummy text file so the `data` folder isn't empty <code>[c932ffc](https://github.com/Norviah/walk-by-default-2.0/commit/c932ffc978b971c73f712e96d331ed20185a8418)</code>
+
 ## [v1.6.0](https://github.com/Norviah/walk-by-default-2.0/compare/v1.5.0...v1.6.0) (2024-05-15)
 
 ### style
