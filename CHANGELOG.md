@@ -1,3 +1,15 @@
+## [v1.6.0](https://github.com/Norviah/walk-by-default-2.0/compare/v1.5.0...v1.6.0) (2024-05-15)
+
+### style
+
+- **cet**: update menu labels for more context <code>[793918b](https://github.com/Norviah/walk-by-default-2.0/commit/793918be4df5e2c4b1f20f09192c6808ab2ef6fb)</code>
+
+### Features
+
+- **cet**: add a feature to toggle the walking state when the player's combat state changes <code>[ddb833f](https://github.com/Norviah/walk-by-default-2.0/commit/ddb833f58d7adc5069431c61ce9701d211f11d71)</code>
+
+- **cet**: don't include default config object <code>[b58fea8](https://github.com/Norviah/walk-by-default-2.0/commit/b58fea85b8c694fdf0195429fa23977dc20af626)</code>
+
 ## [v1.5.0](https://github.com/Norviah/walk-by-default-2.0/compare/v1.5.0-rc2...v1.5.0) (2024-05-14)
 
 ### Features
