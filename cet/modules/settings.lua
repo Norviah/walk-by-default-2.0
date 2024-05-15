@@ -66,7 +66,7 @@ settings.gamepadBind = {
 settings.walkingSpeed = {
   value = 4.0,
   description =
-  "The movement speed for the player when the walking state is toggled using the 'Toggle Walk' button (vanilla value is 1.5).",
+  "The movement speed for the player when the walking state is toggled using the 'Toggle Walk' bind below (vanilla value is 1.5).",
   label = "Walking Speed",
   defaultValue = 4.0,
   min = 0,
@@ -100,7 +100,7 @@ settings.sprintingSpeed = {
 settings.crouchSpeed = {
   value = 1.5,
   description = "The movement speed for the player when crouching (vanilla value is 1.5).",
-  label = "Crouch Speed",
+  label = "Crouching Speed",
   defaultValue = 1.5,
   min = 0,
   max = 30.0,

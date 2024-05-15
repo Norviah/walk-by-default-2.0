@@ -113,7 +113,8 @@ function menu.setup()
   -- Parameters: (path, label, optionalIndex)
 
   local settingsSubcategory = path .. "/settings"
-  nativeSettings.addSubcategory(settingsSubcategory, "Settings")
+  nativeSettings.addSubcategory(settingsSubcategory,
+    "Settings - Don't forget to reload a save after changing the speed values")
 
   -- Parameters: path, label, desc, min, max, step, format, currentValue, defaultValue, callback, optionalIndex
 
