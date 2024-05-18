@@ -1,0 +1,34 @@
+---
+--- When the player enters a scene trigger, the game sometimes will slow the
+--- player's movement down for scene reasons. This is different from setting
+--- the player's movement speed, as this is a temporary change that is applied
+--- on-demand.
+---
+--- In the game's code, there are three types of speed types that the game
+--- will enforce on the player: slow, normal, and fast. If the scene wants the
+--- player to move fast or normal, the game will not touch the player's speed.
+--- If the scene wants the player to move slow, the game will decrease the
+--- player's speed by an amount that depends on if the player is standing,
+--- sprinting, or crouching.
+---
+--- The issue with this is that the game does not account for the player's
+--- current speed when decreasing it, it doesn't set their speed to a specific
+--- value, but rather decreases it by an amount. If the player is already at a
+--- slow speed, the game will decrease it even further. This issue is only
+--- notable for the standing state, as this really represents two states:
+--- jogging and walking. When jogging, the player will slow down, but when
+--- walking, the player will move extremely slow.
+---
+---
+--- This method is responsible for determining the amount that will be added or
+--- subtracted from the player's speed when entering a scene trigger. We'll
+--- override this method to always return 0, letting the player keep their current
+--- speed.
+---
+--- @param self SceneTierIIEvents
+--- @param stateContext StateContext
+--- @param scriptInterface StateGameScriptInterface
+--- @param wrappedMethod fun(stateContext: StateContext, scriptInterface: StateGameScriptInterface): Float
+Override("SceneTierIIEvents", "UpdateSpeedValue", function(self, stateContext, scriptInterface, wrappedMethod)
+  return 0.0
+end)

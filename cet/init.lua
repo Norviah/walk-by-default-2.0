@@ -38,10 +38,11 @@ registerForEvent("onInit", function()
   PushToTweakDB()
 
   -- ---
-  -- LOGIC / FEATURES
+  -- LOGIC
   -- ---
 
   require("features/persist")
+  require("fixes/sceneMovement")
 end)
 
 registerForEvent("onShutdown", function()
