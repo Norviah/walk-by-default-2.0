@@ -1,3 +1,9 @@
+## [v.1.7.0](https://github.com/Norviah/walk-by-default-2.0/compare/v1.6.1...v.1.7.0) (2024-05-17)
+
+### Features
+
+- **cet**: prevent the game from editing the player's movement speed when entering a scene <code>[83d8d1e](https://github.com/Norviah/walk-by-default-2.0/commit/83d8d1ea632cbed4a931c5391704501c24844b35)</code>
+
 ## [v1.6.1](https://github.com/Norviah/walk-by-default-2.0/compare/v1.6.0...v1.6.1) (2024-05-15)
 
 ### Build System
