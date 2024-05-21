@@ -1,3 +1,9 @@
+## [v1.8.0](https://github.com/Norviah/walk-by-default-2.0/compare/v.1.7.0...v1.8.0) (2024-05-20)
+
+### Features
+
+- **redscript**: allow the player to crouch sprint regardless if the walking state was enabled <code>[bfe30f4](https://github.com/Norviah/walk-by-default-2.0/commit/bfe30f40be41f7a447143e07102c2cdc4eb13770)</code>
+
 ## [v.1.7.0](https://github.com/Norviah/walk-by-default-2.0/compare/v1.6.1...v.1.7.0) (2024-05-17)
 
 ### Features
