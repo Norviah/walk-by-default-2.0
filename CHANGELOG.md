@@ -1,3 +1,9 @@
+## [v1.8.1](https://github.com/Norviah/walk-by-default-2.0/compare/v1.8.0...v1.8.1) (2024-05-25)
+
+### Bug Fixes
+
+- **cet**: ensure the custom walking state flag is reset when the player stands <code>[0d00ae7](https://github.com/Norviah/walk-by-default-2.0/commit/0d00ae786706fcca8483bcfa7a865adf8fa2a5ad)</code>
+
 ## [v1.8.0](https://github.com/Norviah/walk-by-default-2.0/compare/v.1.7.0...v1.8.0) (2024-05-20)
 
 ### Features
