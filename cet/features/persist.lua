@@ -128,8 +128,8 @@ end)
 --- @param stateContext StateContext
 --- @param scriptInterface StateGameScriptInterface
 ObserveBefore("StandEvents", "OnEnter", function(self, stateContext, scriptInterface)
-  if settings.persistSystem.value and stateContext:GetBoolParameter("WalkByDefault_SprintFromWalk", true) then
-    if not stateContext:GetBoolParameter("ForceDisableToggleWalk", true) then
+  if stateContext:GetBoolParameter("WalkByDefault_SprintFromWalk", true) then
+    if settings.persistSystem.value and not stateContext:GetBoolParameter("ForceDisableToggleWalk", true) then
       stateContext:SetPermanentBoolParameter("WalkToggled", true, true)
     end
 
