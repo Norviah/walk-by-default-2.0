@@ -1,4 +1,4 @@
-local settings = require("modules/settings")
+local settings = require("utils/settings")
 local config = {}
 
 local path = "data/config.json"

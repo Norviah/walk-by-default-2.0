@@ -6,7 +6,7 @@
 --- walking state, allowing the player to persist in the walking state
 --- permanently.
 
-local settings = require("modules/settings")
+local settings = require("utils/settings")
 
 --- Overrides the `DefaultTransition.ForceDisableToggleWalk` method to not execute
 --- anything if the persist system is enabled.

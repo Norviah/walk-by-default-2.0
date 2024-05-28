@@ -1,5 +1,5 @@
-local inputManager = require("modules/inputManager")
-local settings = require("modules/settings")
+local inputManager = require("utils/inputManager")
+local settings = require("utils/settings")
 
 local menu = {}
 

@@ -1,10 +1,10 @@
 local GameUI = require("lib/GameUI")
 
-local settings = require("modules/settings")
-local config = require("modules/config")
-local inputManager = require("modules/inputManager")
-local menu = require("modules/menu")
-local localization = require("modules/localization")
+local settings = require("utils/settings")
+local config = require("utils/config")
+local inputManager = require("utils/inputManager")
+local menu = require("utils/menu")
+local localization = require("utils/localization")
 
 registerForEvent("onInit", function()
   -- ---
