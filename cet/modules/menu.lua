@@ -178,6 +178,21 @@ function menu.setup()
     end
   )
 
+  nativeSettings.addRangeFloat(
+    settingsSubcategory,
+    settings.crouchSprintSpeed.label,
+    settings.crouchSprintSpeed.description,
+    settings.crouchSprintSpeed.min,
+    settings.crouchSprintSpeed.max,
+    settings.crouchSprintSpeed.step,
+    "%.2f",
+    settings.crouchSprintSpeed.value,
+    settings.crouchSprintSpeed.defaultValue,
+    function(value)
+      settings.crouchSprintSpeed.value = value
+    end
+  )
+
   -- Parameters: path, label, desc, currentValue, defaultValue, callback, optionalIndex
 
   nativeSettings.addSwitch(
