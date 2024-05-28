@@ -6,15 +6,8 @@ local settings = {}
 -- "id"_keys = The number of keys that are being used for the binding of ID
 
 settings.keyboardBind = {
-  keybindLabel = "Key",
-  isHoldLabel = "Is Hold",
-  keybindDescription = "Bind a key that is part of the hotkey",
-  isHoldDescription = "Controls whether the bound key below needs to be held down for some time to be activated",
   id = "mkbBinding",
   maxKeys = 2,
-  maxKeysLabel = "Hotkey Keys Amount",
-  maxKeysDescription =
-  "Changes how many keys this hotkey has, all of them have to pressed for the hotkey to be activated",
   supportsHold = false,
   defaultValue = {
     ["mkbBinding_1"] = "IK_None",  -- Key 1' keycode of the "mkbBinding"
@@ -33,15 +26,8 @@ settings.keyboardBind = {
 }
 
 settings.gamepadBind = {
-  keybindLabel = "Button",
-  isHoldLabel = "Is Hold",
-  keybindDescription = "Bind a button that is part of the hotkey",
-  isHoldDescription = "Controls whether the bound button below needs to be held down for some time to be activated",
   id = "padBinding",
   maxKeys = 3,
-  maxKeysLabel = "Hotkey Buttons Amount",
-  maxKeysDescription =
-  "Changes how many buttons this hotkey has, all of them have to pressed for the hotkey to be activated",
   supportsHold = true,
   defaultValue = {
     ["padBinding_1"] = "IK_Pad_LeftShoulder",
@@ -65,9 +51,6 @@ settings.gamepadBind = {
 
 settings.walkingSpeed = {
   value = 3.5,
-  description =
-  "The movement speed for the player when the walking state is toggled using the 'Toggle Walk' bind below (vanilla value is 1.5).",
-  label = "Walking Speed",
   defaultValue = 3.5,
   min = 0,
   max = 30.0,
@@ -77,8 +60,6 @@ settings.walkingSpeed = {
 
 settings.joggingSpeed = {
   value = 1.5,
-  description = "The default movement speed for the player when loading into the game (vanilla value is 3.5).",
-  label = "Jogging Speed",
   defaultValue = 1.5,
   min = 0,
   max = 30.0,
@@ -88,8 +69,6 @@ settings.joggingSpeed = {
 
 settings.sprintingSpeed = {
   value = 7.5,
-  description = "The movement speed for the player when sprinting (vanilla value is 7.5).",
-  label = "Sprinting Speed",
   defaultValue = 7.5,
   min = 0,
   max = 30.0,
@@ -99,8 +78,6 @@ settings.sprintingSpeed = {
 
 settings.crouchSpeed = {
   value = 1.5,
-  description = "The movement speed for the player when crouching (vanilla value is 1.5).",
-  label = "Crouching Speed",
   defaultValue = 1.5,
   min = 0,
   max = 30.0,
@@ -110,8 +87,6 @@ settings.crouchSpeed = {
 
 settings.crouchSprintSpeed = {
   value = 5.0,
-  description = "The movement speed for the player when crouch sprinting (vanilla value is 5.0).",
-  label = "Crouch Sprinting Speed",
   defaultValue = 5.0,
   min = 0,
   max = 30.0,
@@ -121,17 +96,11 @@ settings.crouchSprintSpeed = {
 
 settings.persistSystem = {
   value = true,
-  description =
-  "Prevents the game from disabling the walking state.\n\nIn vanilla Cyberpunk, various actions will force disable the walking state, such as sprinting or entering combat. Enabling this option will prevent the game from disabling this state, allowing you to persist in the walking state permanently.",
-  label = "Persist System",
   defaultValue = true,
 }
 
 settings.toggleWalkingStateWithCombat = {
   value = false,
-  description =
-  "Toggles the walking state according to when the player enters or leaves combat.\n\nIf the movement speed for the walking state is slow, it could get annoying entering combat and walking a snail's pace, if this option is enabled, the walking state is force disabled when entering combat and re-enabled when leaving combat.",
-  label = "Toggle Walking State With Combat",
   defaultValue = false,
 }
 

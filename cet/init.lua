@@ -4,11 +4,22 @@ local settings = require("modules/settings")
 local config = require("modules/config")
 local inputManager = require("modules/inputManager")
 local menu = require("modules/menu")
+local localization = require("modules/localization")
 
 registerForEvent("onInit", function()
   -- ---
   -- SETUP / INITIALIZATION
   -- ---
+
+  local translations = localization.GetLocalization()
+
+  config.load()
+  inputManager.onInit()
+  menu.setup(translations)
+
+  if not Codeware then -- Required codeware for the inputs
+    print("[" .. translations.modName .. "] " .. translations.errors.missingCodeware)
+  end
 
   -- Listens for the user to navigate away from the settings menu, saving and
   -- pushing settings when they do.
@@ -18,13 +29,6 @@ registerForEvent("onInit", function()
       config.save()
     end
   end)
-
-  if not Codeware then -- Required codeware for the inputs
-    print("[Walk by Default 2.0] Error: Missing Codeware")
-  end
-
-  config.load()
-  menu.setup()
 
   -- As this mod makes the game look at the `Stand_cpo` record for movement data
   -- for walking, we'll make this record the same as the crouch record by making
@@ -61,3 +65,7 @@ function PushToTweakDB()
   TweakDB:SetFlat(settings.crouchSpeed.tweakDBKey, settings.crouchSpeed.value)
   TweakDB:SetFlat(settings.crouchSprintSpeed.tweakDBKey, settings.crouchSprintSpeed.value)
 end
+
+return {
+  GetLanguageCode = localization.GetLanguageCode,
+}

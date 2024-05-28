@@ -4,11 +4,12 @@ local settings = require("modules/settings")
 local menu = {}
 
 --- @param nativeSettingsPath string
---- @param info KeyBindInfo
+--- @param info BindSetting
+--- @param localization BindEntryLocalization
 --- @param updateCallback function
 --- @param index number
 --- @param nativeSettings table
-local function addKeybind(nativeSettingsPath, info, updateCallback, index, nativeSettings) -- Add single keybind widget
+local function addKeybind(nativeSettingsPath, info, localization, updateCallback, index, nativeSettings) -- Add single keybind widget
   local numberText = info.maxKeys ~= 1 and " " .. index or ""
   local holdID = info.id .. "_hold_" .. index
   local numID = info.id .. "_" .. index
@@ -22,8 +23,8 @@ local function addKeybind(nativeSettingsPath, info, updateCallback, index, nativ
   }
 
   if info.supportsHold then
-    inputManager.nuiTables[holdID] = nativeSettings.addSwitch(nativeSettingsPath, info.isHoldLabel .. numberText,
-      info.isHoldDescription, info.value[holdID], info.defaultValue[holdID], function(state)
+    inputManager.nuiTables[holdID] = nativeSettings.addSwitch(nativeSettingsPath, localization.isHoldLabel .. numberText,
+      localization.isHoldDescription, info.value[holdID], info.defaultValue[holdID], function(state)
         inputManager.nuiTables[numID].isHold =
             state                                                                                    -- Update isHold value for nui
         nativeSettings.setOption(inputManager.nuiTables[numID], inputManager.nuiTables[numID].value) -- Force update to see change visually
@@ -32,8 +33,9 @@ local function addKeybind(nativeSettingsPath, info, updateCallback, index, nativ
       end)
   end
 
-  inputManager.nuiTables[numID] = nativeSettings.addKeyBinding(nativeSettingsPath, info.keybindLabel .. numberText,
-    info.keybindDescription, info.value[numID], info.defaultValue[numID], info.value[holdID],
+  inputManager.nuiTables[numID] = nativeSettings.addKeyBinding(nativeSettingsPath,
+    localization.keybindLabel .. numberText,
+    localization.keybindDescription, info.value[numID], info.defaultValue[numID], info.value[holdID],
     function(key)
       inputManager.bindings[info.id]["keys"][index][1] = key
       updateCallback(numID, key)
@@ -41,10 +43,11 @@ local function addKeybind(nativeSettingsPath, info, updateCallback, index, nativ
 end
 
 ---@param nativeSettingsPath string
----@param info KeyBindInfo
+---@param info BindSetting
+---@param localization BindEntryLocalization
 ---@param updateCallback function
 ---@param callback function
-local function addNativeSettingsBinding(nativeSettingsPath, info, updateCallback, callback) -- Add combined hotkey widget from info table
+local function addNativeSettingsBinding(nativeSettingsPath, info, localization, updateCallback, callback) -- Add combined hotkey widget from info table
   local nativeSettings = GetMod("nativeSettings")
 
   if not nativeSettings.pathExists(nativeSettingsPath) then
@@ -58,7 +61,8 @@ local function addNativeSettingsBinding(nativeSettingsPath, info, updateCallback
   if not info.value[maxID] then info.value[maxID] = info.defaultValue[maxID] end
 
   if info.maxKeys ~= 1 then -- Add slider to change amount of key widgets
-    nativeSettings.addRangeInt(nativeSettingsPath, info.maxKeysLabel, info.maxKeysDescription, 1, info.maxKeys,
+    nativeSettings.addRangeInt(nativeSettingsPath, localization.maxKeysLabel, localization.maxKeysDescription, 1,
+      info.maxKeys,
       1, info.value[maxID], info.defaultValue[maxID], function(value)
         updateCallback(maxID, value)
 
@@ -77,14 +81,14 @@ local function addNativeSettingsBinding(nativeSettingsPath, info, updateCallback
 
         for i = 1, value do -- Add keys
           if not inputManager.nuiTables[info.id .. "_" .. i] then
-            addKeybind(nativeSettingsPath, info, updateCallback, i, nativeSettings)
+            addKeybind(nativeSettingsPath, info, localization, updateCallback, i, nativeSettings)
           end
         end
       end)
   end
 
   for i = 1, info.value[maxID] do
-    addKeybind(nativeSettingsPath, info, updateCallback, i, nativeSettings)
+    addKeybind(nativeSettingsPath, info, localization, updateCallback, i, nativeSettings)
   end
 end
 
@@ -96,32 +100,30 @@ local function ToggleWalkInput()
   end
 end
 
-function menu.setup()
+--- @param localization Localization
+function menu.setup(localization)
   local nativeSettings = GetMod("nativeSettings")
 
   if not nativeSettings then
-    print("[Walk by Default 2.0] Error: Missing Native Settings")
+    print("[" .. localization.modName .. "] " .. localization.errors.missingNativeSettings)
     return
   end
 
   local path = "/walk_by_default_2"
 
-  nativeSettings.addTab(path, "Walk by Default 2.0")
-
-  inputManager.onInit()
+  nativeSettings.addTab(path, localization.modName)
 
   -- Parameters: (path, label, optionalIndex)
 
   local settingsSubcategory = path .. "/settings"
-  nativeSettings.addSubcategory(settingsSubcategory,
-    "Settings - Don't forget to reload a save after changing the speed values")
+  nativeSettings.addSubcategory(settingsSubcategory, localization.menu.subcategories.settings)
 
   -- Parameters: path, label, desc, min, max, step, format, currentValue, defaultValue, callback, optionalIndex
 
   nativeSettings.addRangeFloat(
     settingsSubcategory,
-    settings.walkingSpeed.label,
-    settings.walkingSpeed.description,
+    localization.menu.settings.walkingSpeed.label,
+    localization.menu.settings.walkingSpeed.description,
     settings.walkingSpeed.min,
     settings.walkingSpeed.max,
     settings.walkingSpeed.step,
@@ -135,8 +137,8 @@ function menu.setup()
 
   nativeSettings.addRangeFloat(
     settingsSubcategory,
-    settings.joggingSpeed.label,
-    settings.joggingSpeed.description,
+    localization.menu.settings.joggingSpeed.label,
+    localization.menu.settings.joggingSpeed.description,
     settings.joggingSpeed.min,
     settings.joggingSpeed.max,
     settings.joggingSpeed.step,
@@ -150,8 +152,8 @@ function menu.setup()
 
   nativeSettings.addRangeFloat(
     settingsSubcategory,
-    settings.sprintingSpeed.label,
-    settings.sprintingSpeed.description,
+    localization.menu.settings.sprintingSpeed.label,
+    localization.menu.settings.sprintingSpeed.description,
     settings.sprintingSpeed.min,
     settings.sprintingSpeed.max,
     settings.sprintingSpeed.step,
@@ -165,8 +167,8 @@ function menu.setup()
 
   nativeSettings.addRangeFloat(
     settingsSubcategory,
-    settings.crouchSpeed.label,
-    settings.crouchSpeed.description,
+    localization.menu.settings.crouchSpeed.label,
+    localization.menu.settings.crouchSpeed.description,
     settings.crouchSpeed.min,
     settings.crouchSpeed.max,
     settings.crouchSpeed.step,
@@ -180,8 +182,8 @@ function menu.setup()
 
   nativeSettings.addRangeFloat(
     settingsSubcategory,
-    settings.crouchSprintSpeed.label,
-    settings.crouchSprintSpeed.description,
+    localization.menu.settings.crouchSprintSpeed.label,
+    localization.menu.settings.crouchSprintSpeed.description,
     settings.crouchSprintSpeed.min,
     settings.crouchSprintSpeed.max,
     settings.crouchSprintSpeed.step,
@@ -197,8 +199,8 @@ function menu.setup()
 
   nativeSettings.addSwitch(
     settingsSubcategory,
-    settings.persistSystem.label,
-    settings.persistSystem.description,
+    localization.menu.settings.persistSystem.label,
+    localization.menu.settings.persistSystem.description,
     settings.persistSystem.value,
     settings.persistSystem.defaultValue,
     function(value)
@@ -208,8 +210,8 @@ function menu.setup()
 
   nativeSettings.addSwitch(
     settingsSubcategory,
-    settings.toggleWalkingStateWithCombat.label,
-    settings.toggleWalkingStateWithCombat.description,
+    localization.menu.settings.toggleWalkingStateWithCombat.label,
+    localization.menu.settings.toggleWalkingStateWithCombat.description,
     settings.toggleWalkingStateWithCombat.value,
     settings.toggleWalkingStateWithCombat.defaultValue,
     function(value)
@@ -220,26 +222,27 @@ function menu.setup()
   -- Keyboard
 
   local keyboardSubcategory = path .. "/keyboard"
-  nativeSettings.addSubcategory(keyboardSubcategory, "Toggle Walk - Keyboard Binds")
+  nativeSettings.addSubcategory(keyboardSubcategory, localization.menu.subcategories.keyboardBind)
 
   addNativeSettingsBinding(
     keyboardSubcategory,
     settings.keyboardBind,
+    localization.menu.settings.keyboardBind,
     function(name, value)
       settings.keyboardBind.value[name] = value
     end,
     ToggleWalkInput
   )
 
-
   -- Gamepad
 
   local gamepadSubcategory = path .. "/gamepad"
-  nativeSettings.addSubcategory(gamepadSubcategory, "Toggle Walk - Gamepad Binds")
+  nativeSettings.addSubcategory(gamepadSubcategory, localization.menu.subcategories.gamepadBind)
 
   addNativeSettingsBinding(
     gamepadSubcategory,
     settings.gamepadBind,
+    localization.menu.settings.gamepadBind,
     function(name, value)
       settings.gamepadBind.value[name] = value
     end,

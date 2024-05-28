@@ -1,16 +1,3 @@
----@class KeyBindInfo
----@field keybindLabel string
----@field isHoldLabel string
----@field keybindDescription string
----@field isHoldDescription string
----@field id string
----@field maxKeys number
----@field maxKeysLabel string
----@field maxKeysDescription string
----@field supportsHold boolean
----@field defaultValue table
----@field value table
-
 local holdTime = 0.5
 
 local input = {
