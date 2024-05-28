@@ -1,4 +1,4 @@
-local GameUI = require("modules/lib/GameUI")
+local GameUI = require("lib/GameUI")
 
 local settings = require("modules/settings")
 local config = require("modules/config")
