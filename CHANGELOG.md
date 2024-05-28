@@ -1,3 +1,9 @@
+## [v1.9.0](https://github.com/Norviah/walk-by-default-2.0/compare/v1.8.1...v1.9.0) (2024-05-27)
+
+### Features
+
+- **cet**: add a setting to edit the speed for crouch sprinting <code>[95a159e](https://github.com/Norviah/walk-by-default-2.0/commit/95a159eff1b2c9e559848d86f365886c12b653a9)</code>
+
 ## [v1.8.1](https://github.com/Norviah/walk-by-default-2.0/compare/v1.8.0...v1.8.1) (2024-05-25)
 
 ### Bug Fixes
