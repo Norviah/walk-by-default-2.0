@@ -1,3 +1,13 @@
+## [v1.10.0](https://github.com/Norviah/walk-by-default-2.0/compare/v1.9.0...v1.10.0) (2024-05-28)
+
+### Features
+
+- **cet**: add localization <code>[fe509ed](https://github.com/Norviah/walk-by-default-2.0/commit/fe509ed41effa9573f5f0c29e8711c75d3320dc8)</code>
+
+### Build System
+
+- **scripts**: add a script for installing and uninstalling the mod <code>[636a0ad](https://github.com/Norviah/walk-by-default-2.0/commit/636a0ad0e6da44a1bd92ea96f2e0e60e98f391c5)</code>
+
 ## [v1.9.0](https://github.com/Norviah/walk-by-default-2.0/compare/v1.8.1...v1.9.0) (2024-05-27)
 
 ### Features
