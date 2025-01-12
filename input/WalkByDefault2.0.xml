@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<bindings>
+  <!-- You can change the hotkeys here -->
+  <!-- Supported input keys: https://nativedb.red4ext.com/e/1069987916070430 -->
+
+  <buttonGroup id="ToggleWalk_Gamepad" timeWindow="0.08f" >
+    <button id="IK_Pad_LeftShoulder" />
+    <button id="IK_Pad_X_SQUARE" />
+  </buttonGroup> 
+
+  <mapping name="ToggleWalk_Button" type="Button" append="true">
+    <button id="ToggleWalk_Gamepad" />
+	</mapping>
+</bindings>

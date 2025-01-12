@@ -1,12 +1,5 @@
-/**
- * Wraps the `CrouchSprintDecisions.ToCrouch` method to not check whether if the
- * player had the walk state toggled before entering the crouch state.
- *
- * For some reason, when the player tries to sprint while crouching, the game will
- * prevent them from doing so if they had the walk state toggled before crouching.
- * This script will remove this check, allowing the player to sprint while crouching
- * regardless of the state they entered crouch from.
- */
+module WalkByDefault.Misc
+
 @replaceMethod(CrouchSprintDecisions)
 protected const func ToCrouch(const stateContext: ref<StateContext>, const scriptInterface: ref<StateGameScriptInterface>) -> Bool {
   let minLinearVelocityThreshold: Float;
