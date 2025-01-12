@@ -1,4 +1,6 @@
-source "$(git rev-parse --show-toplevel)/scripts/paths.sh"
+# uninstalls the mod from the game
 
-rm -rf "${paths[CYBERPUNK_ROOT]}/${paths[CET_PATH]}/${paths[NAME]}"
+source "$(git rev-parse --show-toplevel)/scripts/utils.sh"
+
 rm -rf "${paths[CYBERPUNK_ROOT]}/${paths[REDSCRIPT_PATH]}/${paths[NAME]}"
+rm -rf "${paths[CYBERPUNK_ROOT]}/${paths[INPUT_PATH]}/${paths[NAME]}.xml"

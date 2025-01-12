@@ -1,10 +1,10 @@
-source "$(git rev-parse --show-toplevel)/scripts/paths.sh"
+# imports mod files from the game directory to the git directory
 
-rm -rf "${paths[ROOT]}/cet"
-rm -rf "${paths[ROOT]}/redscript"
+source "$(git rev-parse --show-toplevel)/scripts/utils.sh"
 
-cp -r "${paths[CYBERPUNK_ROOT]}/${paths[CET_PATH]}/${paths[NAME]}/" "${paths[ROOT]}/cet"
+# delete mod files from the git directory
+source "$(git rev-parse --show-toplevel)/scripts/delete.sh"
+
+# copy mod files to the git directory
 cp -r "${paths[CYBERPUNK_ROOT]}/${paths[REDSCRIPT_PATH]}/${paths[NAME]}/" "${paths[ROOT]}/redscript"
-
-cd "${paths[ROOT]}/cet"
-rm *.sqlite3 *.log data/*.json
+cp -r "${paths[CYBERPUNK_ROOT]}/${paths[INPUT_PATH]}/${paths[NAME]}.xml" "${paths[ROOT]}/input/${paths[NAME]}.xml"
