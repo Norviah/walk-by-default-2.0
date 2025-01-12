@@ -55,7 +55,7 @@
   "prompt": false,
   "unreleasedHeader": "Unreleased",
   "breakingHeader": "⚠ Breaking Changes",
-  "includeBody": false,
+  "includeBody": true,
   "includeNonConventionalCommits": true,
   "tag": "v{{after}}",
   "releaseSubject": "chore(release): {{tag}}",
