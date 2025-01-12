@@ -1,3 +1,15 @@
+## [v2.0.0-rc1](https://github.com/Norviah/walk-by-default-2.0/compare/v1.10.0...v2.0.0-rc1) (2025-01-12)
+
+### Features
+
+- re-write the mod in redscript with input loader <code>[3ff304e](https://github.com/Norviah/walk-by-default-2.0/commit/3ff304e61a04cfb36e30f01452a0c740b0b32e5d)</code>
+
+### Build System
+
+- **bump**: also include commit bodies in changelogs <code>[4698a7c](https://github.com/Norviah/walk-by-default-2.0/commit/4698a7c57300d6c4fafa6ceb8ecb834bfc5057d5)</code>
+
+- **scripts**: update scripts and also include comments <code>[94c8053](https://github.com/Norviah/walk-by-default-2.0/commit/94c805396ed0a24a727a7eebe68a44adb9b62d51)</code>
+
 ## [v1.10.0](https://github.com/Norviah/walk-by-default-2.0/compare/v1.9.0...v1.10.0) (2024-05-28)
 
 ### Features
