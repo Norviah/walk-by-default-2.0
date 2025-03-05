@@ -35,7 +35,7 @@ public func OnEnter(stateContext: ref<StateContext>, scriptInterface: ref<StateG
 @wrapMethod(StandEvents)
 public func OnEnter(stateContext: ref<StateContext>, scriptInterface: ref<StateGameScriptInterface>) -> Void {
   if stateContext.GetBoolParameter(n"SprintFromWalk", true) {
-    if this.GetWBDConfig().IsPersistSystemEnabled() {
+    if this.GetWBDConfig().IsPersistSystemEnabled() && !stateContext.GetBoolParameter(n"ForceDisableToggleWalk", true) {
       stateContext.SetPermanentBoolParameter(n"WalkToggled", true, true);
     }
 
