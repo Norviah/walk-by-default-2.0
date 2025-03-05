@@ -283,3 +283,12 @@ public func OnEnter(stateContext: ref<StateContext>, scriptInterface: ref<StateG
     GetPlayer(scriptInterface.GetGame()).SetMaxSpeed(MovementState.CrouchSprinting);
   }
 }
+
+@wrapMethod(AimWalkEvents)
+public func OnEnter(stateContext: ref<StateContext>, scriptInterface: ref<StateGameScriptInterface>) -> Void {
+  wrappedMethod(stateContext, scriptInterface);
+
+  if this.GetWBDConfig().IsEnabled() {
+    GetPlayer(scriptInterface.GetGame()).SetMaxSpeed(MovementState.AimWalking);
+  }
+}

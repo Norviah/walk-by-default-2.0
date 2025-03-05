@@ -80,6 +80,16 @@ public class Config extends ScriptableService {
   @runtimeProperty("ModSettings.mod", "Walk by Default 2.0")
   @runtimeProperty("ModSettings.category", "WalkByDefault-Config-MovementSpeed")
   @runtimeProperty("ModSettings.category.order", "2")
+  @runtimeProperty("ModSettings.displayName", "WalkByDefault-Config-MovementSpeed-AimWalking-DisplayName")
+  @runtimeProperty("ModSettings.description", "WalkByDefault-Config-MovementSpeed-AimWalking-Description")
+  @runtimeProperty("ModSettings.min", "0.0")
+  @runtimeProperty("ModSettings.max", "15.0")
+  @runtimeProperty("ModSettings.step", "0.1")
+  private let aimWalkingSpeed: Float = 1.5;
+
+  @runtimeProperty("ModSettings.mod", "Walk by Default 2.0")
+  @runtimeProperty("ModSettings.category", "WalkByDefault-Config-MovementSpeed")
+  @runtimeProperty("ModSettings.category.order", "2")
   @runtimeProperty("ModSettings.displayName", "WalkByDefault-Config-MovementSpeed-Crouching-DisplayName")
   @runtimeProperty("ModSettings.description", "WalkByDefault-Config-MovementSpeed-Crouching-Description")
   @runtimeProperty("ModSettings.min", "0.0")
@@ -141,6 +151,8 @@ public class Config extends ScriptableService {
         return this.crouchingSpeed;
       case MovementState.CrouchSprinting:
         return this.crouchSprintingSpeed;
+      case MovementState.AimWalking:
+        return this.aimWalkingSpeed;
     }
 
     return 3.5;

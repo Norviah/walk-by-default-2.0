@@ -6,4 +6,5 @@ public enum MovementState {
   Sprinting = 2,
   Crouching = 3,
   CrouchSprinting = 4,
+  AimWalking = 5,
 }

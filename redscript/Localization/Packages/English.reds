@@ -25,6 +25,8 @@ public class English extends ModLocalizationPackage {
     this.Text("WalkByDefault-Config-MovementSpeed-Jogging-Description",         "The movement speed for the jog state (vanilla value is 3.5).");
     this.Text("WalkByDefault-Config-MovementSpeed-Sprinting-DisplayName",       "Sprint Speed");
     this.Text("WalkByDefault-Config-MovementSpeed-Sprinting-Description",       "The movement speed when sprinting (vanilla value is 7.5).");
+    this.Text("WalkByDefault-Config-MovementSpeed-AimWalking-DisplayName",      "Aim Walk Speed");
+    this.Text("WalkByDefault-Config-MovementSpeed-AimWalking-Description",      "The movement speed while aiming and scanning (vanilla value is 1.5).");
     this.Text("WalkByDefault-Config-MovementSpeed-Crouching-DisplayName",       "Crouch Speed");
     this.Text("WalkByDefault-Config-MovementSpeed-Crouching-Description",       "The movement speed when crouching (vanilla value is 1.5).");
     this.Text("WalkByDefault-Config-MovementSpeed-CrouchSprinting-DisplayName", "Crouch Sprint Speed");
