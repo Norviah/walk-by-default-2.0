@@ -1,9 +1,21 @@
 module WalkByDefault.Listeners
 
 import WalkByDefault.Core.Config
+import WalkByDefault.Core.MovementState
+
 
 @addField(PlayerPuppet)
 private let m_wbdConfig: ref<Config>;
+
+@addField(PlayerPuppet)
+private let m_speedModifierStat: ref<gameStatModifierData>;
+
+@addField(PlayerPuppet)
+private let m_maxSpeed: Float = 3.5;
+
+@addField(PlayerPuppet)
+private let m_cachedSpeedModifier: Float = 0.00;
+
 
 @wrapMethod(PlayerPuppet)
 protected cb func OnGameAttached() -> Bool {
@@ -17,8 +29,20 @@ protected cb func OnGameAttached() -> Bool {
 @wrapMethod(PlayerPuppet)
 protected cb func OnDetach() -> Bool {
   this.m_wbdConfig = null;
+  this.m_speedModifierStat = null;
   
   return wrappedMethod();
+}
+
+@addMethod(PlayerPuppet)
+protected func GetControlledPuppet() -> ref<PlayerPuppet> {
+  let puppet = GameInstance.GetPlayerSystem(this.GetGame()).GetLocalPlayerControlledGameObject() as PlayerPuppet;
+
+  if IsDefined(puppet) && puppet.IsJohnnyReplacer() {
+    return puppet;
+  } else {
+    return this;
+  }
 }
 
 @replaceMethod(PlayerPuppet)
@@ -28,13 +52,7 @@ private final func ProcessToggleWalkInput() -> Void {
   psmEvent.aspect = gamestateMachineParameterAspect.Permanent;
   psmEvent.value = true;
 
-  let playerPuppet = GameInstance.GetPlayerSystem(this.GetGame()).GetLocalPlayerControlledGameObject() as PlayerPuppet;
-
-  if IsDefined(playerPuppet) && playerPuppet.IsJohnnyReplacer() {
-    playerPuppet.QueueEvent(psmEvent);
-  } else {
-    this.QueueEvent(psmEvent);
-  }
+  this.GetControlledPuppet().QueueEvent(psmEvent);
 }
 
 @replaceMethod(PlayerPuppet)
@@ -80,4 +98,127 @@ protected cb func OnCombatStateChanged(newState: Int32) -> Bool {
   } else {
     this.GetSensorObjectComponent().SetForcedSensesTracing(gamedataSenseObjectType.Camera, EAIAttitude.AIA_Hostile);
   };
+}
+
+
+@addMethod(PlayerPuppet)
+protected func SetMaxSpeed(state: MovementState) -> Void {
+  let statSystem = GameInstance.GetStatsSystem(this.GetGame());
+  let ownerID: StatsObjectID = Cast<StatsObjectID>(this.GetEntityID());
+
+  this.m_maxSpeed = this.m_wbdConfig.GetSpeed(state);
+
+  statSystem.RemoveAllModifiers(ownerID, gamedataStatType.MaxSpeed, true);
+  statSystem.AddModifier(ownerID, RPGManager.CreateStatModifier(gamedataStatType.MaxSpeed, gameStatModifierType.Additive, this.m_maxSpeed));
+
+  if !IsDefined(this.m_speedModifierStat) {
+    this.m_speedModifierStat = RPGManager.CreateStatModifier(gamedataStatType.MaxSpeed, gameStatModifierType.Additive, this.m_cachedSpeedModifier);
+  }
+
+  statSystem.AddModifier(ownerID, this.m_speedModifierStat);
+}
+
+@addMethod(PlayerPuppet)
+protected func GetDetailedLocomotionState() -> gamePSMDetailedLocomotionStates {
+  let defs = GetAllBlackboardDefs();
+  let blackboard = this.GetPlayerStateMachineBlackboard();
+  let int = blackboard.GetInt(defs.PlayerStateMachine.LocomotionDetailed);
+
+  return IntEnum<gamePSMDetailedLocomotionStates>(int);
+}
+
+@addMethod(PlayerPuppet)
+protected func PrintMaxSpeedStat() -> Void {
+  let statsSystem = GameInstance.GetStatsSystem(this.GetGame());
+  let ownerID: StatsObjectID = Cast<StatsObjectID>(this.GetEntityID());
+  let types = statsSystem.GetStatDetails(ownerID);
+
+  for type in types {
+    if Equals(type.statType, gamedataStatType.MaxSpeed) {
+      FTLog(s"state: \(this.GetDetailedLocomotionState())");
+      FTLog(s"max speed: \(this.m_maxSpeed)");
+      FTLog(s"stat type: \(type.statType)");
+      FTLog(s"value: \(type.value)");
+    
+      for modifier in type.modifiers {
+        FTLog(s"  - modifier: \(modifier.modifierType) | value: \(modifier.value)");
+      }
+    }
+  }
+}
+
+
+@wrapMethod(StandEvents)
+public func OnEnter(stateContext: ref<StateContext>, scriptInterface: ref<StateGameScriptInterface>) -> Void {
+  let isWalkingDisabled = stateContext.GetBoolParameter(n"ForceDisableToggleWalk", true);
+  let isWalkingToggled = stateContext.GetBoolParameter(n"WalkToggled", true);
+  let enteredSprintFromWalking = stateContext.GetBoolParameter(n"SprintFromWalk", true);
+
+  let isWalking = !isWalkingDisabled && (isWalkingToggled || enteredSprintFromWalking);
+
+  wrappedMethod(stateContext, scriptInterface);
+
+  if isWalking {
+    this.OnWalkEnter(stateContext, scriptInterface);
+  } else {
+    this.OnJogEnter(stateContext, scriptInterface);
+  }
+}
+
+@wrapMethod(StandEvents)
+protected final func OnTick(timeDelta: Float, stateContext: ref<StateContext>, scriptInterface: ref<StateGameScriptInterface>) -> Void {
+  let isWalkingDisabled = stateContext.GetBoolParameter(n"ForceDisableToggleWalk", true);
+  let isWalkingToggled = stateContext.GetBoolParameter(n"WalkToggled", true);
+  let isInputRegisted = stateContext.GetBoolParameter(n"ToggleWalkInputRegistered", true);
+
+  wrappedMethod(timeDelta, stateContext, scriptInterface);
+
+  if !isWalkingDisabled && isInputRegisted {
+    if isWalkingToggled {
+      this.OnJogEnter(stateContext, scriptInterface);
+    } else {
+      this.OnWalkEnter(stateContext, scriptInterface);
+    }
+  }
+}
+
+@addMethod(StandEvents)
+public func OnJogEnter(stateContext: ref<StateContext>, scriptInterface: ref<StateGameScriptInterface>) -> Void {
+  if this.GetWBDConfig().IsEnabled() {
+    GetPlayer(scriptInterface.GetGame()).SetMaxSpeed(MovementState.Jogging);
+  }
+}
+
+@addMethod(StandEvents)
+public func OnWalkEnter(stateContext: ref<StateContext>, scriptInterface: ref<StateGameScriptInterface>) -> Void {
+  if this.GetWBDConfig().IsEnabled() {
+    GetPlayer(scriptInterface.GetGame()).SetMaxSpeed(MovementState.Walking);
+  }
+}
+
+@wrapMethod(SprintEvents)
+public func OnEnter(stateContext: ref<StateContext>, scriptInterface: ref<StateGameScriptInterface>) -> Void {
+  wrappedMethod(stateContext, scriptInterface);
+
+  if this.GetWBDConfig().IsEnabled() {
+    GetPlayer(scriptInterface.GetGame()).SetMaxSpeed(MovementState.Sprinting);
+  }
+}
+
+@wrapMethod(CrouchEvents)
+public func OnEnter(stateContext: ref<StateContext>, scriptInterface: ref<StateGameScriptInterface>) -> Void {
+  wrappedMethod(stateContext, scriptInterface);
+
+  if this.GetWBDConfig().IsEnabled() {
+    GetPlayer(scriptInterface.GetGame()).SetMaxSpeed(MovementState.Crouching);
+  }
+}
+
+@wrapMethod(CrouchSprintEvents)
+public func OnEnter(stateContext: ref<StateContext>, scriptInterface: ref<StateGameScriptInterface>) -> Void {
+  wrappedMethod(stateContext, scriptInterface);
+
+  if this.GetWBDConfig().IsEnabled() {
+    GetPlayer(scriptInterface.GetGame()).SetMaxSpeed(MovementState.CrouchSprinting);
+  }
 }

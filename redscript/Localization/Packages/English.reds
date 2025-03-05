@@ -16,7 +16,7 @@ public class English extends ModLocalizationPackage {
     this.Text("WalkByDefault-Config-General-PreserveSpeedInScenes-DisplayName", "Preserve Movement Speed in Scenes");
     this.Text("WalkByDefault-Config-General-PreserveSpeedInScenes-Description", "Prevents the game from lowering your movement speed in scenes.");
 
-    this.Text("WalkByDefault-Config-MovementSpeed",                             "Movement Speed - Don’t Forget to Reload a Save After Changing the Speed Values");
+    this.Text("WalkByDefault-Config-MovementSpeed",                             "Movement Speed");
     this.Text("WalkByDefault-Config-MovementSpeed-Walking-DisplayName",         "Walk Speed");
     this.Text("WalkByDefault-Config-MovementSpeed-Walking-Description",         "The movement speed when the walk state is toggled (vanilla value is 1.5).");
     this.Text("WalkByDefault-Config-MovementSpeed-Jogging-DisplayName",         "Jog Speed");

@@ -89,8 +89,6 @@ public class Config extends ScriptableService {
 
   private cb func OnLoad() -> Void {
     ModSettings.RegisterListenerToClass(this);
-
-    GameInstance.GetCallbackSystem().RegisterCallback(n"Session/BeforeEnd", this, n"OnSessionBeforeEnd");
   }
 
   private cb func OnReload() -> Void {
@@ -101,8 +99,8 @@ public class Config extends ScriptableService {
     ModSettings.UnregisterListenerToClass(this);
   }
 
-  private cb func OnSessionBeforeEnd(event: ref<GameSessionEvent>) {
-    this.PushToDatabase();
+  public func IsEnabled() -> Bool {
+    return this.isEnabled;
   }
 
   public func IsPersistSystemEnabled() -> Bool {
@@ -117,22 +115,21 @@ public class Config extends ScriptableService {
     return this.isEnabled && this.preserveMovementSpeedInScenes;
   }
 
-  public func PushToDatabase() -> Void {
-    if !this.isEnabled {
-      return;
+  public func GetSpeed(state: MovementState) -> Float {
+    switch state {
+      case MovementState.Jogging:
+        return this.joggingSpeed;
+      case MovementState.Walking:
+        return this.walkingSpeed;
+      case MovementState.Sprinting:
+        return this.sprintingSpeed;
+      case MovementState.Crouching:
+        return this.crouchingSpeed;
+      case MovementState.CrouchSprinting:
+        return this.crouchSprintingSpeed;
     }
 
-    TweakDBManager.SetFlat(n"PlayerLocomotion.player_locomotion_data_Stand_cpo_inline1.value", this.walkingSpeed);
-    TweakDBManager.SetFlat(n"PlayerLocomotion.player_locomotion_data_Stand_inline1.value", this.joggingSpeed);
-    TweakDBManager.SetFlat(n"PlayerLocomotion.player_locomotion_data_Sprint_inline1.value", this.sprintingSpeed);
-    TweakDBManager.SetFlat(n"PlayerLocomotion.player_locomotion_data_Crouch_inline1.value", this.crouchingSpeed);
-    TweakDBManager.SetFlat(n"PlayerLocomotion.player_locomotion_data_CrouchSprint_inline1.value", this.crouchSprintingSpeed);
-
-    TweakDBManager.UpdateRecord(t"PlayerLocomotion.player_locomotion_data_Stand_cpo_inline1");
-    TweakDBManager.UpdateRecord(t"PlayerLocomotion.player_locomotion_data_Stand_inline1");
-    TweakDBManager.UpdateRecord(t"PlayerLocomotion.player_locomotion_data_Sprint_inline1");
-    TweakDBManager.UpdateRecord(t"PlayerLocomotion.player_locomotion_data_Crouch_inline1");
-    TweakDBManager.UpdateRecord(t"PlayerLocomotion.player_locomotion_data_CrouchSprint_inline1");
+    return 3.5;
   }
 
   public final static func GetInstance() -> ref<Config> {
