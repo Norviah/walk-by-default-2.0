@@ -119,6 +119,46 @@ protected func SetMaxSpeed(state: MovementState) -> Void {
 }
 
 @addMethod(PlayerPuppet)
+protected func SetMaxSpeedModifier(initialModifier: Float) -> Void {
+  let statSystem = GameInstance.GetStatsSystem(this.GetGame());
+  let ownerID: StatsObjectID = Cast<StatsObjectID>(this.GetEntityID());
+
+  let modifier: Float;
+
+  if initialModifier > 15.0 {
+    modifier = 15.0;
+  } else if initialModifier < -this.m_maxSpeed {
+    modifier = -this.m_maxSpeed;
+  } else {
+    modifier = initialModifier;
+  }
+
+  if IsDefined(this.m_speedModifierStat) {
+    statSystem.RemoveModifier(ownerID, this.m_speedModifierStat);
+  }
+
+  this.m_speedModifierStat = RPGManager.CreateStatModifier(gamedataStatType.MaxSpeed, gameStatModifierType.Additive, modifier);
+  statSystem.AddModifier(ownerID, this.m_speedModifierStat);
+
+  this.m_cachedSpeedModifier = modifier;
+}
+
+@addMethod(PlayerPuppet)
+protected func IncreaseMaxSpeedModifier() -> Void {
+  this.SetMaxSpeedModifier(this.m_cachedSpeedModifier + this.m_wbdConfig.GetModifyAmount());
+}
+
+@addMethod(PlayerPuppet)
+protected func DecreaseMaxSpeedModifier() -> Void {
+  this.SetMaxSpeedModifier(this.m_cachedSpeedModifier - this.m_wbdConfig.GetModifyAmount());
+}
+
+@addMethod(PlayerPuppet)
+protected func ResetMaxSpeedModifier() -> Void {
+  this.SetMaxSpeedModifier(0.00);
+}
+
+@addMethod(PlayerPuppet)
 protected func GetDetailedLocomotionState() -> gamePSMDetailedLocomotionStates {
   let defs = GetAllBlackboardDefs();
   let blackboard = this.GetPlayerStateMachineBlackboard();
@@ -145,6 +185,27 @@ protected func PrintMaxSpeedStat() -> Void {
       }
     }
   }
+}
+
+@wrapMethod(PlayerPuppet)
+protected cb func OnAction(action: ListenerAction, consumer: ListenerActionConsumer) -> Bool {
+  let result = wrappedMethod(action, consumer);
+
+  if !this.m_wbdConfig.IsEnabled() || !ListenerAction.IsButtonJustReleased(action) {
+    return result;
+  }
+
+  if Equals(ListenerAction.GetName(action), n"IncreaseMovementSpeed") {
+    this.GetControlledPuppet().IncreaseMaxSpeedModifier();
+  } else if Equals(ListenerAction.GetName(action), n"DecreaseMovementSpeed") {
+    this.GetControlledPuppet().DecreaseMaxSpeedModifier();
+  } else if Equals(ListenerAction.GetName(action), n"ResetMovementSpeed") {
+    this.GetControlledPuppet().ResetMaxSpeedModifier();
+  } else if Equals(ListenerAction.GetName(action), n"PrintMovementSpeed") {
+    this.GetControlledPuppet().PrintMaxSpeedStat();
+  }
+
+  return result;
 }
 
 

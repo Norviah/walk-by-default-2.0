@@ -33,6 +33,16 @@ public class Config extends ScriptableService {
   @runtimeProperty("ModSettings.description", "WalkByDefault-Config-General-PreserveSpeedInScenes-Description")
   private let preserveMovementSpeedInScenes: Bool = true;
 
+  @runtimeProperty("ModSettings.mod", "Walk by Default 2.0")
+  @runtimeProperty("ModSettings.category", "WalkByDefault-Config-General")
+  @runtimeProperty("ModSettings.category.order", "2")
+  @runtimeProperty("ModSettings.displayName", "WalkByDefault-Config-General-ModifyAmount-DisplayName")
+  @runtimeProperty("ModSettings.description", "WalkByDefault-Config-General-ModifyAmount-Description")
+  @runtimeProperty("ModSettings.min", "0.1")
+  @runtimeProperty("ModSettings.max", "2.0")
+  @runtimeProperty("ModSettings.step", "0.1")
+  private let modifyAmount: Float = 0.5;
+
   // ---
   // MOVEMENT SPEED
   // ---
@@ -113,6 +123,10 @@ public class Config extends ScriptableService {
 
   public func ShouldPreserveMovementSpeedInScenes() -> Bool {
     return this.isEnabled && this.preserveMovementSpeedInScenes;
+  }
+
+  public func GetModifyAmount() -> Float {
+    return this.modifyAmount;
   }
 
   public func GetSpeed(state: MovementState) -> Float {

@@ -15,6 +15,8 @@ public class English extends ModLocalizationPackage {
     this.Text("WalkByDefault-Config-General-ToggleStateInCombat-Description",   "Disables/enables the walking state when entering/exiting combat, this should only be enabled if the movement speed are vanilla values, i.e. the walking state's speed is slow.");
     this.Text("WalkByDefault-Config-General-PreserveSpeedInScenes-DisplayName", "Preserve Movement Speed in Scenes");
     this.Text("WalkByDefault-Config-General-PreserveSpeedInScenes-Description", "Prevents the game from lowering your movement speed in scenes.");
+    this.Text("WalkByDefault-Config-General-ModifyAmount-DisplayName",          "Modify Amount");
+    this.Text("WalkByDefault-Config-General-ModifyAmount-Description",          "The amount to use when increasing/decreasing your movement speed.");
 
     this.Text("WalkByDefault-Config-MovementSpeed",                             "Movement Speed");
     this.Text("WalkByDefault-Config-MovementSpeed-Walking-DisplayName",         "Walk Speed");
