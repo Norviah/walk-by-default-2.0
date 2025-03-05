@@ -1,3 +1,25 @@
+## [v2.1.0](https://github.com/Norviah/walk-by-default-2.0/compare/v2.0.0-rc1...v2.1.0) (2025-03-05)
+
+### Features
+
+- **translations**: add russian translation <code>[fed959c](https://github.com/Norviah/walk-by-default-2.0/commit/fed959c0169b37e6486bb24ee663b8efa62d117b)</code>
+
+	thank you to PumpernikeL
+
+- **translations**: add chinese translation <code>[498b58e](https://github.com/Norviah/walk-by-default-2.0/commit/498b58ecc766a4c7f1293d71439ef1d1a673161c)</code>
+
+	thank you to TrygveHusky
+
+- add the option to edit the movement speed for aim walking <code>[9c58459](https://github.com/Norviah/walk-by-default-2.0/commit/9c58459005000eafc69b2fb03d9f83c65c208990)</code>
+
+- implement the ability to increase/decrease the movement speed on demand <code>[05c83b0](https://github.com/Norviah/walk-by-default-2.0/commit/05c83b0c2f13a47f3865e0dc561cd29518beb8be)</code>
+
+- edit movement speed by modifying the player's stats directly <code>[18b28f6](https://github.com/Norviah/walk-by-default-2.0/commit/18b28f6fe1097e62998851c9d3e2d7579ddc7a77)</code>
+
+- set the max amount for movement speed to `15.0` <code>[8653eca](https://github.com/Norviah/walk-by-default-2.0/commit/8653ecaf34fc9539143bf2aa61d965796657fdc6)</code>
+
+- ensure that the toggled state isn't disabled when enabling it after sprinting <code>[0d6e154](https://github.com/Norviah/walk-by-default-2.0/commit/0d6e154ed6e0cd950ca1620d426954aa683d7717)</code>
+
 ## [v2.0.0-rc1](https://github.com/Norviah/walk-by-default-2.0/compare/v1.10.0...v2.0.0-rc1) (2025-01-12)
 
 ### Features
