@@ -8,6 +8,8 @@ public class LocalizationProvider extends ModLocalizationProvider {
     switch language {
       case n"en-us":
         return new English();
+      case n"zh-cn":
+        return new Chinese();
       default:
         return null;
     }
