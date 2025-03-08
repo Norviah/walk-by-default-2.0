@@ -1,3 +1,9 @@
+## [v2.1.1](https://github.com/Norviah/walk-by-default-2.0/compare/v2.1.0...v2.1.1) (2025-03-08)
+
+### Features
+
+- update movement speed after leaving mod settings menu <code>[90a384b](https://github.com/Norviah/walk-by-default-2.0/commit/90a384be1c0a3810a4f8d4313e1cfa7b7222ac19)</code>
+
 ## [v2.1.0](https://github.com/Norviah/walk-by-default-2.0/compare/v2.0.0-rc1...v2.1.0) (2025-03-05)
 
 ### Features
