@@ -8,4 +8,6 @@ public enum MovementState {
   Crouching = 4,
   CrouchSprinting = 5,
   AimWalking = 6,
+  Swimming = 7,
+  FastSwimming = 8
 }

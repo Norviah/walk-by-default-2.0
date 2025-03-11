@@ -107,6 +107,26 @@ public class Config extends ScriptableService {
   @runtimeProperty("ModSettings.step", "0.1")
   private let crouchSprintingSpeed: Float = 5.0;
 
+  @runtimeProperty("ModSettings.mod", "Walk by Default 2.0")
+  @runtimeProperty("ModSettings.category", "WalkByDefault-Config-MovementSpeed")
+  @runtimeProperty("ModSettings.category.order", "2")
+  @runtimeProperty("ModSettings.displayName", "WalkByDefault-Config-MovementSpeed-Swimming-DisplayName")
+  @runtimeProperty("ModSettings.description", "WalkByDefault-Config-MovementSpeed-Swimming-Description")
+  @runtimeProperty("ModSettings.min", "0.0")
+  @runtimeProperty("ModSettings.max", "15.0")
+  @runtimeProperty("ModSettings.step", "0.1")
+  private let swimmingSpeed: Float = 1.0;
+
+  @runtimeProperty("ModSettings.mod", "Walk by Default 2.0")
+  @runtimeProperty("ModSettings.category", "WalkByDefault-Config-MovementSpeed")
+  @runtimeProperty("ModSettings.category.order", "2")
+  @runtimeProperty("ModSettings.displayName", "WalkByDefault-Config-MovementSpeed-FastSwimming-DisplayName")
+  @runtimeProperty("ModSettings.description", "WalkByDefault-Config-MovementSpeed-FastSwimming-Description")
+  @runtimeProperty("ModSettings.min", "0.0")
+  @runtimeProperty("ModSettings.max", "15.0")
+  @runtimeProperty("ModSettings.step", "0.1")
+  private let fastSwimmingSpeed: Float = 1.5;
+
   private cb func OnLoad() -> Void {
     ModSettings.RegisterListenerToClass(this);
   }
@@ -153,6 +173,10 @@ public class Config extends ScriptableService {
         return this.crouchSprintingSpeed;
       case MovementState.AimWalking:
         return this.aimWalkingSpeed;
+      case MovementState.Swimming:
+        return this.swimmingSpeed;
+      case MovementState.FastSwimming:
+        return this.fastSwimmingSpeed;
     }
 
     return 3.5;

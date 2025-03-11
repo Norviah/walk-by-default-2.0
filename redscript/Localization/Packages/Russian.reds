@@ -31,5 +31,9 @@ public class Russian extends ModLocalizationPackage {
     this.Text("WalkByDefault-Config-MovementSpeed-Crouching-Description",       "Скорость передвижения в приседе (ванильное значение: 1.5).");
     this.Text("WalkByDefault-Config-MovementSpeed-CrouchSprinting-DisplayName", "Скрытное ускорение");
     this.Text("WalkByDefault-Config-MovementSpeed-CrouchSprinting-Description", "Скорость передвижения при скрытном ускорении (ванильное значение: 5.0).");
+    this.Text("WalkByDefault-Config-MovementSpeed-Swimming-DisplayName",        "Swimming");
+    this.Text("WalkByDefault-Config-MovementSpeed-Swimming-Description",        "The movement speed when swimming (vanilla value is 1.0).");
+    this.Text("WalkByDefault-Config-MovementSpeed-FastSwimming-DisplayName",    "Fast Swimming");
+    this.Text("WalkByDefault-Config-MovementSpeed-FastSwimming-Description",    "The movement speed when fast swimming (vanilla value is 1.5).");
   }
 }

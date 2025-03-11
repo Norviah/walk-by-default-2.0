@@ -31,5 +31,9 @@ public class Chinese extends ModLocalizationPackage {
     this.Text("WalkByDefault-Config-MovementSpeed-Crouching-Description",       "蹲伏时的移动速度(原版值为1.5)");
     this.Text("WalkByDefault-Config-MovementSpeed-CrouchSprinting-DisplayName", "蹲伏冲刺速度");
     this.Text("WalkByDefault-Config-MovementSpeed-CrouchSprinting-Description", "蹲伏冲刺时的移动速度(原版值为5.0)");
+    this.Text("WalkByDefault-Config-MovementSpeed-Swimming-DisplayName",        "Swimming");
+    this.Text("WalkByDefault-Config-MovementSpeed-Swimming-Description",        "The movement speed when swimming (vanilla value is 1.0).");
+    this.Text("WalkByDefault-Config-MovementSpeed-FastSwimming-DisplayName",    "Fast Swimming");
+    this.Text("WalkByDefault-Config-MovementSpeed-FastSwimming-Description",    "The movement speed when fast swimming (vanilla value is 1.5).");
   }
 }

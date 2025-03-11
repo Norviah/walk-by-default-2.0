@@ -319,7 +319,43 @@ public func OnEnter(stateContext: ref<StateContext>, scriptInterface: ref<StateG
   }
 }
 
-@wrapMethod(LocomotionGroundEvents)
+@wrapMethod(SwimmingSurfaceEvents)
+public func OnEnter(stateContext: ref<StateContext>, scriptInterface: ref<StateGameScriptInterface>) -> Void {
+  wrappedMethod(stateContext, scriptInterface);
+
+  if this.GetWBDConfig().IsEnabled() {
+    GetPlayer(scriptInterface.GetGame()).SetMovementState(MovementState.Swimming);
+  }
+}
+
+@wrapMethod(SwimmingSurfaceFastEvents)
+public func OnEnter(stateContext: ref<StateContext>, scriptInterface: ref<StateGameScriptInterface>) -> Void {
+  wrappedMethod(stateContext, scriptInterface);
+
+  if this.GetWBDConfig().IsEnabled() {
+    GetPlayer(scriptInterface.GetGame()).SetMovementState(MovementState.FastSwimming);
+  }
+}
+
+@wrapMethod(SwimmingDivingEvents)
+public func OnEnter(stateContext: ref<StateContext>, scriptInterface: ref<StateGameScriptInterface>) -> Void {
+  wrappedMethod(stateContext, scriptInterface);
+
+  if this.GetWBDConfig().IsEnabled() {
+    GetPlayer(scriptInterface.GetGame()).SetMovementState(MovementState.Swimming);
+  }
+}
+
+@wrapMethod(SwimmingFastDivingEvents)
+public func OnEnter(stateContext: ref<StateContext>, scriptInterface: ref<StateGameScriptInterface>) -> Void {
+  wrappedMethod(stateContext, scriptInterface);
+
+  if this.GetWBDConfig().IsEnabled() {
+    GetPlayer(scriptInterface.GetGame()).SetMovementState(MovementState.FastSwimming);
+  }
+}
+
+@wrapMethod(LocomotionEventsTransition)
 public func OnExit(stateContext: ref<StateContext>, scriptInterface: ref<StateGameScriptInterface>) -> Void {
   wrappedMethod(stateContext, scriptInterface);
 
