@@ -201,7 +201,7 @@ protected func PrintMaxSpeedStat() -> Void {
 
   for type in types {
     if Equals(type.statType, gamedataStatType.MaxSpeed) {
-      FTLog(s"state: \(this.GetDetailedLocomotionState())");
+      FTLog(s"state: \(Equals(this.m_movementState, MovementState.Unknown) ? ToString(this.GetDetailedLocomotionState()) : ToString(this.m_movementState))");
       FTLog(s"max speed: \(this.m_maxSpeed)");
       FTLog(s"stat type: \(type.statType)");
       FTLog(s"value: \(type.value)");
