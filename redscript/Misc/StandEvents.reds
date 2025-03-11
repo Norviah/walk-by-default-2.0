@@ -12,8 +12,8 @@ public func OnEnter(stateContext: ref<StateContext>, scriptInterface: ref<StateG
   super.OnEnter(stateContext, scriptInterface);
 
   if stateContext.GetBoolParameter(n"WalkToggled", true) && !stateContext.GetBoolParameter(n"ForceDisableToggleWalk", true) {
-    this.SetDetailedState(scriptInterface, gamePSMDetailedLocomotionStates.Crouch);
-    this.SetModifierGroupForState(scriptInterface, "PlayerLocomotion.player_locomotion_data_Stand_cpo"); // The only changed line.
+    this.SetDetailedState(scriptInterface, gamePSMDetailedLocomotionStates.Stand);
+    this.SetModifierGroupForState(scriptInterface, "PlayerLocomotion.player_locomotion_data_Stand_cpo");
   } else {
     this.SetDetailedState(scriptInterface, gamePSMDetailedLocomotionStates.Stand);
   };
@@ -56,8 +56,8 @@ protected final func OnTick(timeDelta: Float, stateContext: ref<StateContext>, s
         this.SetModifierGroupForState(scriptInterface, "PlayerLocomotion.player_locomotion_data_Stand");
         this.ProcessPermanentBoolParameterToggle(n"WalkToggled", false, stateContext);
       } else {
-        this.SetDetailedState(scriptInterface, gamePSMDetailedLocomotionStates.Crouch);
-        this.SetModifierGroupForState(scriptInterface, "PlayerLocomotion.player_locomotion_data_Stand_cpo"); // The only changed line.
+        this.SetDetailedState(scriptInterface, gamePSMDetailedLocomotionStates.Stand);
+        this.SetModifierGroupForState(scriptInterface, "PlayerLocomotion.player_locomotion_data_Stand_cpo");
         this.ProcessPermanentBoolParameterToggle(n"WalkToggled", true, stateContext);
       };
 
