@@ -1,4 +1,4 @@
-module WalkByDefault.Misc
+module WalkByDefault.Fixes
 
 @replaceMethod(StandEvents)
 public func OnEnter(stateContext: ref<StateContext>, scriptInterface: ref<StateGameScriptInterface>) -> Void {

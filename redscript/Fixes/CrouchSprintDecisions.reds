@@ -1,4 +1,4 @@
-module WalkByDefault.Misc
+module WalkByDefault.Fixes
 
 @replaceMethod(CrouchSprintDecisions)
 protected const func ToCrouch(const stateContext: ref<StateContext>, const scriptInterface: ref<StateGameScriptInterface>) -> Bool {

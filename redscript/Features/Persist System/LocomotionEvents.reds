@@ -1,18 +1,6 @@
-module WalkByDefault.Listeners
+module WalkByDefault.PersistSystem
 
 import WalkByDefault.Core.Config
-
-@addField(DefaultTransition)
-private let m_wbdConfig: wref<Config>;
-
-@addMethod(DefaultTransition)
-protected func GetWBDConfig() -> ref<Config> {
-  if !IsDefined(this.m_wbdConfig) {
-    this.m_wbdConfig = Config.GetInstance();
-  }
-
-  return this.m_wbdConfig;
-}
 
 @wrapMethod(DefaultTransition)
 protected const final func ForceDisableToggleWalk(stateContext: ref<StateContext>) -> Void {
@@ -43,13 +31,4 @@ public func OnEnter(stateContext: ref<StateContext>, scriptInterface: ref<StateG
   }
 
   wrappedMethod(stateContext, scriptInterface);
-}
-
-@wrapMethod(SceneTierIIEvents)
-protected final func UpdateSpeedValue(stateContext: ref<StateContext>, scriptInterface: ref<StateGameScriptInterface>) -> Float {
-  if this.GetWBDConfig().ShouldPreserveMovementSpeedInScenes() {
-    return 0.0;
-  } else {
-    return wrappedMethod(stateContext, scriptInterface);
-  }
 }
