@@ -3,6 +3,17 @@ module WalkByDefault.MovementSpeed
 import WalkByDefault.Core.Config
 import WalkByDefault.Core.MovementState
 
+
+@addMethod(LocomotionTransition)
+protected func SetMovementState(scriptInterface: ref<StateGameScriptInterface>, state: MovementState, name: String) -> Void {
+  GetPlayer(scriptInterface.GetGame()).SetMovementState(state, name);
+}
+
+@addMethod(LocomotionTransition)
+protected func SetMovementState(scriptInterface: ref<StateGameScriptInterface>, state: MovementState) -> Void {
+  GetPlayer(scriptInterface.GetGame()).SetMovementState(state, this.m_statModifierTDBNameDefault);
+}
+
 @wrapMethod(StandEvents)
 public func OnEnter(stateContext: ref<StateContext>, scriptInterface: ref<StateGameScriptInterface>) -> Void {
   let isWalkingDisabled = stateContext.GetBoolParameter(n"ForceDisableToggleWalk", true);
@@ -39,95 +50,73 @@ protected final func OnTick(timeDelta: Float, stateContext: ref<StateContext>, s
 
 @addMethod(StandEvents)
 public func OnJogEnter(stateContext: ref<StateContext>, scriptInterface: ref<StateGameScriptInterface>) -> Void {
-  if this.GetWBDConfig().IsEnabled() {
-    GetPlayer(scriptInterface.GetGame()).SetMovementState(MovementState.Jogging);
-  }
+  this.SetMovementState(scriptInterface, MovementState.Jogging);
 }
 
 @addMethod(StandEvents)
 public func OnWalkEnter(stateContext: ref<StateContext>, scriptInterface: ref<StateGameScriptInterface>) -> Void {
-  if this.GetWBDConfig().IsEnabled() {
-    GetPlayer(scriptInterface.GetGame()).SetMovementState(MovementState.Walking);
-  }
+  this.SetMovementState(scriptInterface, MovementState.Walking, "PlayerLocomotion.player_locomotion_data_Stand_cpo");
 }
 
 @wrapMethod(SprintEvents)
 public func OnEnter(stateContext: ref<StateContext>, scriptInterface: ref<StateGameScriptInterface>) -> Void {
   wrappedMethod(stateContext, scriptInterface);
 
-  if this.GetWBDConfig().IsEnabled() {
-    GetPlayer(scriptInterface.GetGame()).SetMovementState(MovementState.Sprinting);
-  }
+  this.SetMovementState(scriptInterface, MovementState.Sprinting);
 }
 
 @wrapMethod(CrouchEvents)
 public func OnEnter(stateContext: ref<StateContext>, scriptInterface: ref<StateGameScriptInterface>) -> Void {
   wrappedMethod(stateContext, scriptInterface);
 
-  if this.GetWBDConfig().IsEnabled() {
-    GetPlayer(scriptInterface.GetGame()).SetMovementState(MovementState.Crouching);
-  }
+  this.SetMovementState(scriptInterface, MovementState.Crouching);
 }
 
 @wrapMethod(CrouchSprintEvents)
 public func OnEnter(stateContext: ref<StateContext>, scriptInterface: ref<StateGameScriptInterface>) -> Void {
   wrappedMethod(stateContext, scriptInterface);
 
-  if this.GetWBDConfig().IsEnabled() {
-    GetPlayer(scriptInterface.GetGame()).SetMovementState(MovementState.CrouchSprinting);
-  }
+  this.SetMovementState(scriptInterface, MovementState.CrouchSprinting);
 }
 
 @wrapMethod(AimWalkEvents)
 public func OnEnter(stateContext: ref<StateContext>, scriptInterface: ref<StateGameScriptInterface>) -> Void {
   wrappedMethod(stateContext, scriptInterface);
 
-  if this.GetWBDConfig().IsEnabled() {
-    GetPlayer(scriptInterface.GetGame()).SetMovementState(MovementState.AimWalking);
-  }
+  this.SetMovementState(scriptInterface, MovementState.AimWalking);
 }
 
 @wrapMethod(SwimmingSurfaceEvents)
 public func OnEnter(stateContext: ref<StateContext>, scriptInterface: ref<StateGameScriptInterface>) -> Void {
   wrappedMethod(stateContext, scriptInterface);
 
-  if this.GetWBDConfig().IsEnabled() {
-    GetPlayer(scriptInterface.GetGame()).SetMovementState(MovementState.Swimming);
-  }
+  this.SetMovementState(scriptInterface, MovementState.Swimming);
 }
 
 @wrapMethod(SwimmingSurfaceFastEvents)
 public func OnEnter(stateContext: ref<StateContext>, scriptInterface: ref<StateGameScriptInterface>) -> Void {
   wrappedMethod(stateContext, scriptInterface);
 
-  if this.GetWBDConfig().IsEnabled() {
-    GetPlayer(scriptInterface.GetGame()).SetMovementState(MovementState.FastSwimming);
-  }
+  this.SetMovementState(scriptInterface, MovementState.FastSwimming);
 }
 
 @wrapMethod(SwimmingDivingEvents)
 public func OnEnter(stateContext: ref<StateContext>, scriptInterface: ref<StateGameScriptInterface>) -> Void {
   wrappedMethod(stateContext, scriptInterface);
 
-  if this.GetWBDConfig().IsEnabled() {
-    GetPlayer(scriptInterface.GetGame()).SetMovementState(MovementState.Swimming);
-  }
+  this.SetMovementState(scriptInterface, MovementState.Swimming);
 }
 
 @wrapMethod(SwimmingFastDivingEvents)
 public func OnEnter(stateContext: ref<StateContext>, scriptInterface: ref<StateGameScriptInterface>) -> Void {
   wrappedMethod(stateContext, scriptInterface);
 
-  if this.GetWBDConfig().IsEnabled() {
-    GetPlayer(scriptInterface.GetGame()).SetMovementState(MovementState.FastSwimming);
-  }
+  this.SetMovementState(scriptInterface, MovementState.FastSwimming);
 }
 
 @wrapMethod(LocomotionEventsTransition)
 public func OnExit(stateContext: ref<StateContext>, scriptInterface: ref<StateGameScriptInterface>) -> Void {
   wrappedMethod(stateContext, scriptInterface);
 
-  if this.GetWBDConfig().IsEnabled() {
-    GetPlayer(scriptInterface.GetGame()).ResetMovementState();
-  }
+  GetPlayer(scriptInterface.GetGame()).ResetMovementState();
 }

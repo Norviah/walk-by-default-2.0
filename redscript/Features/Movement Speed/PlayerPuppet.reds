@@ -5,121 +5,232 @@ import WalkByDefault.Core.MovementState
 
 
 @addField(PlayerPuppet)
-private let m_movementState: MovementState = MovementState.Unknown;
+private let m_initializedStats: Bool = false;
+
+@addField(PlayerPuppet)
+private let m_baseSpeedStat: ref<gameStatModifierData>;
+
+@addField(PlayerPuppet)
+private let m_maxSpeedValue: Float = 3.5;
 
 @addField(PlayerPuppet)
 private let m_speedModifierStat: ref<gameStatModifierData>;
 
 @addField(PlayerPuppet)
-private let m_maxSpeed: Float = 3.5;
+private let m_speedModifierValue: Float = 0.00;
 
 @addField(PlayerPuppet)
-private let m_cachedSpeedModifier: Float = 0.00;
+private let m_movementState: ref<MovementStateData>;
 
+@addField(PlayerPuppet)
+private let m_statsSystem: ref<StatsSystem>;
+
+@addField(PlayerPuppet)
+private let m_ownerID: StatsObjectID;
+
+
+@addMethod(PlayerPuppet)
+protected func InitializeStatModifiers() -> Void {
+  if this.m_initializedStats {
+    return;
+  }
+
+  this.m_baseSpeedStat = RPGManager.CreateStatModifier(gamedataStatType.MaxSpeed, gameStatModifierType.Additive, this.m_maxSpeedValue);
+  this.m_speedModifierStat = RPGManager.CreateStatModifier(gamedataStatType.MaxSpeed, gameStatModifierType.Additive, this.m_speedModifierValue);
+
+  this.AddStatModifier(this.m_baseSpeedStat);
+  this.AddStatModifier(this.m_speedModifierStat);
+
+  this.m_initializedStats = true;
+}
+
+@addMethod(PlayerPuppet)
+protected func UninitializeStatModifiers() -> Void {
+  if !this.m_initializedStats {
+    return;
+  }
+
+  this.RemoveStatModifier(this.m_baseSpeedStat);
+  this.RemoveStatModifier(this.m_speedModifierStat);
+
+  this.m_baseSpeedStat = null;
+  this.m_speedModifierStat = null;
+
+  this.m_initializedStats = false;
+}
 
 @wrapMethod(PlayerPuppet)
-protected cb func OnDetach() -> Bool {
-  if IsDefined(this.m_speedModifierStat) {
-    this.m_speedModifierStat = null;
+protected cb func OnGameAttached() -> Bool {
+  this.m_statsSystem = this.GetGame().GetStatsSystem();
+  this.m_ownerID = Cast<StatsObjectID>(this.GetEntityID());
+
+  if Config.GetInstance().IsEnabled() {
+    this.InitializeStatModifiers();
   }
   
   return wrappedMethod();
 }
 
-@addMethod(PlayerPuppet)
-protected func SetMaxSpeed(speed: Float) -> Void {
-  let statSystem = GameInstance.GetStatsSystem(this.GetGame());
-  let ownerID: StatsObjectID = Cast<StatsObjectID>(this.GetEntityID());
-
-  this.m_maxSpeed = speed;
-
-  statSystem.RemoveAllModifiers(ownerID, gamedataStatType.MaxSpeed, true);
-  statSystem.AddModifier(ownerID, RPGManager.CreateStatModifier(gamedataStatType.MaxSpeed, gameStatModifierType.Additive, this.m_maxSpeed));
-
-  if !IsDefined(this.m_speedModifierStat) {
-    this.m_speedModifierStat = RPGManager.CreateStatModifier(gamedataStatType.MaxSpeed, gameStatModifierType.Additive, this.m_cachedSpeedModifier);
+@wrapMethod(PlayerPuppet)
+protected cb func OnDetach() -> Bool {
+  if this.m_initializedStats {
+    this.UninitializeStatModifiers();
   }
 
-  statSystem.AddModifier(ownerID, this.m_speedModifierStat);
+  this.m_movementState = null;
+  this.m_statsSystem = null;
+  
+  return wrappedMethod();
 }
 
 @addMethod(PlayerPuppet)
-protected func SetMovementState(state: MovementState) -> Void {
-  if !Equals(state, MovementState.Unknown) {
-    this.m_movementState = state;
+public func AddStatModifier(modifier: ref<gameStatModifierData>) -> Void {
+  this.m_statsSystem.AddModifier(this.m_ownerID, modifier);
+}
+
+@addMethod(PlayerPuppet)
+public func RemoveStatModifier(modifier: ref<gameStatModifierData>) -> Void {
+  this.m_statsSystem.RemoveModifier(this.m_ownerID, modifier);
+}
+
+@addMethod(PlayerPuppet)
+private func GetRecordMaxSpeedValue() -> Float {
+  let modifierRecordID: TweakDBID = TDBID.Create(this.m_movementState.GetTweakDBName());
+  let modifierRecord: ref<StatModifierGroup_Record> = TweakDBInterface.GetRecord(modifierRecordID) as StatModifierGroup_Record;
+
+  if !IsDefined(modifierRecord) {
+    return 0.0;
+  }
+
+  let modifiers: array<wref<StatModifier_Record>>;
+  modifierRecord.StatModifiers(modifiers);
+
+  for rawModifier in modifiers {
+    let modifier = rawModifier as ConstantStatModifier_Record;
+    let statTypeEnum = modifier.StatTypeHandle().StatType();
+
+    if Equals(statTypeEnum, gamedataStatType.MaxSpeed) {
+      return modifier.Value();
+    }
+  }
+
+  return 0.0;
+}
+
+@addMethod(PlayerPuppet)
+protected func AddDefaultMaxSpeedStat() -> Void {
+  this.AddStatModifier(RPGManager.CreateStatModifier(gamedataStatType.MaxSpeed, gameStatModifierType.Additive, this.GetRecordMaxSpeedValue()));
+}
+
+@addMethod(PlayerPuppet)
+protected func RemoveDefaultMaxSpeedStat() -> Void {
+  this.RemoveStatModifier(RPGManager.CreateStatModifier(gamedataStatType.MaxSpeed, gameStatModifierType.Additive, this.GetRecordMaxSpeedValue()));
+}
+
+@addMethod(PlayerPuppet)
+protected final func SetStatModifierData(value: Float, out property: Float, out modifier: ref<gameStatModifierData>) -> Void {
+  if IsDefined(modifier) {
+    this.RemoveStatModifier(modifier);
+  }
+
+  property = value;
+  modifier = RPGManager.CreateStatModifier(gamedataStatType.MaxSpeed, gameStatModifierType.Additive, value);
+
+  this.AddStatModifier(modifier);
+}
+
+@addMethod(PlayerPuppet)
+public func SetMaxSpeed(speed: Float) -> Void {
+  this.SetStatModifierData(speed, this.m_maxSpeedValue, this.m_baseSpeedStat);
+}
+
+@addMethod(PlayerPuppet)
+public func SetMaxSpeedModifier(initialModifier: Float) -> Void {
+  let modifier: Float;
+
+  if initialModifier > 15.0 {
+    modifier = 15.0;
+  } else if initialModifier < -this.m_maxSpeedValue {
+    modifier = -this.m_maxSpeedValue;
+  } else {
+    modifier = initialModifier;
+  }
+
+  this.SetStatModifierData(modifier, this.m_speedModifierValue, this.m_speedModifierStat);
+}
+
+@addMethod(PlayerPuppet)
+public func IncreaseMaxSpeedModifier() -> Void {
+  this.SetMaxSpeedModifier(this.m_speedModifierValue + this.m_wbdConfig.GetModifyAmount());
+}
+
+@addMethod(PlayerPuppet)
+public func DecreaseMaxSpeedModifier() -> Void {
+  this.SetMaxSpeedModifier(this.m_speedModifierValue - this.m_wbdConfig.GetModifyAmount());
+}
+
+@addMethod(PlayerPuppet)
+public func ResetMaxSpeedModifier() -> Void {
+  this.SetMaxSpeedModifier(0.00);
+}
+
+@addMethod(PlayerPuppet)
+protected func SetMovementState(state: MovementState, TDBName: String) -> Void {
+  this.m_movementState = MovementStateData.Initialize(state, TDBName);
+
+  if this.m_wbdConfig.IsEnabled() {
+    this.RemoveDefaultMaxSpeedStat();
     this.SetMaxSpeed(this.m_wbdConfig.GetSpeed(state));
   }
 }
 
 @addMethod(PlayerPuppet)
 protected func ResetMovementState() -> Void {
-  this.m_movementState = MovementState.Unknown;
-  this.m_maxSpeed = this.m_wbdConfig.GetSpeed(MovementState.Unknown);
-}
+  this.m_movementState = null;
 
-@addMethod(PlayerPuppet)
-protected func ReloadMovementSpeed() -> Void {
-  if this.m_wbdConfig.IsEnabled() && !Equals(this.m_movementState, MovementState.Unknown) {
-    return;
-  }
-
-  let speed = this.m_wbdConfig.GetSpeed(this.m_movementState);
-
-  if !Equals(speed, this.m_maxSpeed) {
-    this.SetMaxSpeed(speed);
+  if this.m_initializedStats {
+    this.RemoveStatModifier(this.m_baseSpeedStat);
   }
 }
 
 @addMethod(PlayerPuppet)
-protected func SetMaxSpeedModifier(initialModifier: Float) -> Void {
-  let statSystem = GameInstance.GetStatsSystem(this.GetGame());
-  let ownerID: StatsObjectID = Cast<StatsObjectID>(this.GetEntityID());
+protected func OnExitModSettingsMenu() -> Void {
+  if this.m_wbdConfig.IsEnabled() && !this.m_initializedStats {
+    this.m_maxSpeedValue = this.m_wbdConfig.GetSpeed(this.m_movementState.GetEnum());
 
-  let modifier: Float;
-
-  if initialModifier > 15.0 {
-    modifier = 15.0;
-  } else if initialModifier < -this.m_maxSpeed {
-    modifier = -this.m_maxSpeed;
-  } else {
-    modifier = initialModifier;
+    this.RemoveDefaultMaxSpeedStat();
+    this.InitializeStatModifiers();
+  } else if !this.m_wbdConfig.IsEnabled() && this.m_initializedStats {
+    this.UninitializeStatModifiers();
+    this.AddDefaultMaxSpeedStat();
   }
 
-  if IsDefined(this.m_speedModifierStat) {
-    statSystem.RemoveModifier(ownerID, this.m_speedModifierStat);
+  if this.m_wbdConfig.IsEnabled() && !IsDefined(this.m_movementState) {
+    let speed: Float = this.m_wbdConfig.GetSpeed(this.m_movementState.GetEnum());
+
+    if !Equals(speed, this.m_maxSpeedValue) {
+      this.SetMaxSpeed(speed);
+    }
   }
-
-  this.m_speedModifierStat = RPGManager.CreateStatModifier(gamedataStatType.MaxSpeed, gameStatModifierType.Additive, modifier);
-  statSystem.AddModifier(ownerID, this.m_speedModifierStat);
-
-  this.m_cachedSpeedModifier = modifier;
 }
 
 @addMethod(PlayerPuppet)
-protected func IncreaseMaxSpeedModifier() -> Void {
-  this.SetMaxSpeedModifier(this.m_cachedSpeedModifier + this.m_wbdConfig.GetModifyAmount());
-}
+protected func GetDetailedLocomotionState() -> gamePSMDetailedLocomotionStates {
+  let defs = GetAllBlackboardDefs();
+  let blackboard = this.GetPlayerStateMachineBlackboard();
+  let int = blackboard.GetInt(defs.PlayerStateMachine.LocomotionDetailed);
 
-@addMethod(PlayerPuppet)
-protected func DecreaseMaxSpeedModifier() -> Void {
-  this.SetMaxSpeedModifier(this.m_cachedSpeedModifier - this.m_wbdConfig.GetModifyAmount());
-}
-
-@addMethod(PlayerPuppet)
-protected func ResetMaxSpeedModifier() -> Void {
-  this.SetMaxSpeedModifier(0.00);
+  return IntEnum<gamePSMDetailedLocomotionStates>(int);
 }
 
 @addMethod(PlayerPuppet)
 protected func PrintMaxSpeedStat() -> Void {
-  let statsSystem = GameInstance.GetStatsSystem(this.GetGame());
-  let ownerID: StatsObjectID = Cast<StatsObjectID>(this.GetEntityID());
-  let types = statsSystem.GetStatDetails(ownerID);
+  let types: array<gameStatDetailedData> = this.m_statsSystem.GetStatDetails(this.m_ownerID);
 
   for type in types {
     if Equals(type.statType, gamedataStatType.MaxSpeed) {
-      FTLog(s"state: \(Equals(this.m_movementState, MovementState.Unknown) ? ToString(this.GetDetailedLocomotionState()) : ToString(this.m_movementState))");
-      FTLog(s"max speed: \(this.m_maxSpeed)");
+      FTLog(s"state: \(!this.m_movementState.IsValid() ? ToString(this.GetDetailedLocomotionState()) : ToString(this.m_movementState.GetEnum()))");
+      FTLog(s"max speed: \(this.m_maxSpeedValue)");
       FTLog(s"stat type: \(type.statType)");
       FTLog(s"value: \(type.value)");
     
@@ -134,7 +245,13 @@ protected func PrintMaxSpeedStat() -> Void {
 protected cb func OnAction(action: ListenerAction, consumer: ListenerActionConsumer) -> Bool {
   let result = wrappedMethod(action, consumer);
 
-  if !this.m_wbdConfig.IsEnabled() || !ListenerAction.IsButtonJustReleased(action) {
+  if !ListenerAction.IsButtonJustReleased(action) {
+    return result;
+  } else if Equals(ListenerAction.GetName(action), n"PrintMovementSpeed") {
+    this.GetControlledPuppet().PrintMaxSpeedStat();
+  }
+
+  if !this.m_wbdConfig.IsEnabled() {
     return result;
   }
 
@@ -144,8 +261,6 @@ protected cb func OnAction(action: ListenerAction, consumer: ListenerActionConsu
     this.GetControlledPuppet().DecreaseMaxSpeedModifier();
   } else if Equals(ListenerAction.GetName(action), n"ResetMovementSpeed") {
     this.GetControlledPuppet().ResetMaxSpeedModifier();
-  } else if Equals(ListenerAction.GetName(action), n"PrintMovementSpeed") {
-    this.GetControlledPuppet().PrintMaxSpeedStat();
   }
 
   return result;
@@ -154,7 +269,7 @@ protected cb func OnAction(action: ListenerAction, consumer: ListenerActionConsu
 @wrapMethod(MenuScenario_BaseMenu)
 protected final func SwitchMenu(menuName: CName, opt userData: ref<IScriptable>, opt context: ScreenDisplayContext) -> Void {
   if Equals(menuName, n"pause_menu") && Equals(this.m_currMenuName, n"mod_settings_main") {
-    GetPlayer(GetGameInstance()).ReloadMovementSpeed();
+    GetPlayer(GetGameInstance()).OnExitModSettingsMenu();
   }
 
   wrappedMethod(menuName, userData, context);

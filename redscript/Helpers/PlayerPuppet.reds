@@ -33,12 +33,3 @@ protected func GetControlledPuppet() -> ref<PlayerPuppet> {
     return this;
   }
 }
-
-@addMethod(PlayerPuppet)
-protected func GetDetailedLocomotionState() -> gamePSMDetailedLocomotionStates {
-  let defs = GetAllBlackboardDefs();
-  let blackboard = this.GetPlayerStateMachineBlackboard();
-  let int = blackboard.GetInt(defs.PlayerStateMachine.LocomotionDetailed);
-
-  return IntEnum<gamePSMDetailedLocomotionStates>(int);
-}
