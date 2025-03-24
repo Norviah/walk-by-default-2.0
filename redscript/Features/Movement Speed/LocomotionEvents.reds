@@ -14,6 +14,11 @@ protected func SetMovementState(scriptInterface: ref<StateGameScriptInterface>, 
   GetPlayer(scriptInterface.GetGame()).SetMovementState(state, this.m_statModifierTDBNameDefault);
 }
 
+@addMethod(LocomotionTransition)
+protected func ResetMovementState(scriptInterface: ref<StateGameScriptInterface>) -> Void {
+  GetPlayer(scriptInterface.GetGame()).ResetMovementState();
+}
+
 @wrapMethod(StandEvents)
 public func OnEnter(stateContext: ref<StateContext>, scriptInterface: ref<StateGameScriptInterface>) -> Void {
   let isWalkingDisabled = stateContext.GetBoolParameter(n"ForceDisableToggleWalk", true);
@@ -40,6 +45,8 @@ protected final func OnTick(timeDelta: Float, stateContext: ref<StateContext>, s
   wrappedMethod(timeDelta, stateContext, scriptInterface);
 
   if !isWalkingDisabled && isInputRegisted {
+    this.ResetMovementState(scriptInterface);
+
     if isWalkingToggled {
       this.OnJogEnter(stateContext, scriptInterface);
     } else {
@@ -118,5 +125,5 @@ public func OnEnter(stateContext: ref<StateContext>, scriptInterface: ref<StateG
 public func OnExit(stateContext: ref<StateContext>, scriptInterface: ref<StateGameScriptInterface>) -> Void {
   wrappedMethod(stateContext, scriptInterface);
 
-  GetPlayer(scriptInterface.GetGame()).ResetMovementState();
+  this.ResetMovementState(scriptInterface);
 }
