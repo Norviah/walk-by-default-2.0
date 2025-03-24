@@ -4,14 +4,25 @@ import WalkByDefault.Core.Config
 import WalkByDefault.Core.MovementState
 
 
+// ---
+// FLAGS
+// ---
+
 @addField(PlayerPuppet)
 private let m_initializedStats: Bool = false;
+
+@addField(PlayerPuppet)
+private let m_isClothingModifierEnabled: Bool = false;
+
+// ---
+// PROPERTIES
+// ---
 
 @addField(PlayerPuppet)
 private let m_baseSpeedStat: ref<gameStatModifierData>;
 
 @addField(PlayerPuppet)
-private let m_maxSpeedValue: Float = 3.5;
+private let m_baseSpeedValue: Float = 3.5;
 
 @addField(PlayerPuppet)
 private let m_speedModifierStat: ref<gameStatModifierData>;
@@ -28,6 +39,109 @@ private let m_statsSystem: ref<StatsSystem>;
 @addField(PlayerPuppet)
 private let m_ownerID: StatsObjectID;
 
+@addField(PlayerPuppet)
+private let m_clothingModifiers: array<ref<ClothingModifier>>;
+
+
+// ---
+// HELPERS
+// ---
+
+@addMethod(PlayerPuppet)
+public func AddStatModifier(modifier: ref<gameStatModifierData>) -> Void {
+  this.m_statsSystem.AddModifier(this.m_ownerID, modifier);
+}
+
+@addMethod(PlayerPuppet)
+public func RemoveStatModifier(modifier: ref<gameStatModifierData>) -> Void {
+  this.m_statsSystem.RemoveModifier(this.m_ownerID, modifier);
+}
+
+@addMethod(PlayerPuppet)
+public func HasStatModifier(statType: gamedataStatType, modifierType: gameStatModifierType, value: Float) -> Bool {
+  for detail in this.m_statsSystem.GetStatDetails(this.m_ownerID) {
+    if Equals(detail.statType, statType) {
+      for modifier in detail.modifiers {
+        if Equals(modifierType, modifier.modifierType) && Equals(value, modifier.value) {
+          return true;    
+        }
+      }
+    }
+  }
+
+  return false;
+}
+
+@addMethod(PlayerPuppet)
+protected final func SetStatModifierProperty(value: Float, out property: Float, out modifier: ref<gameStatModifierData>) -> Void {
+  if IsDefined(modifier) {
+    this.RemoveStatModifier(modifier);
+  }
+
+  property = value;
+  modifier = RPGManager.CreateStatModifier(gamedataStatType.MaxSpeed, gameStatModifierType.Additive, value);
+
+  this.AddStatModifier(modifier);
+}
+
+@addMethod(PlayerPuppet)
+public func SetMaxSpeed(speed: Float) -> Void {
+  this.SetStatModifierProperty(speed, this.m_baseSpeedValue, this.m_baseSpeedStat);
+}
+
+@addMethod(PlayerPuppet)
+public func SetMaxSpeedModifier(initialModifier: Float) -> Void {
+  let modifier: Float;
+
+  if initialModifier > 15.0 {
+    modifier = 15.0;
+  } else if initialModifier < -this.m_baseSpeedValue {
+    modifier = -this.m_baseSpeedValue;
+  } else {
+    modifier = initialModifier;
+  }
+
+  this.SetStatModifierProperty(modifier, this.m_speedModifierValue, this.m_speedModifierStat);
+}
+
+@addMethod(PlayerPuppet)
+public func IncreaseMaxSpeedModifier() -> Void {
+  this.SetMaxSpeedModifier(this.m_speedModifierValue + this.m_wbdConfig.GetModifyAmount());
+}
+
+@addMethod(PlayerPuppet)
+public func DecreaseMaxSpeedModifier() -> Void {
+  this.SetMaxSpeedModifier(this.m_speedModifierValue - this.m_wbdConfig.GetModifyAmount());
+}
+
+@addMethod(PlayerPuppet)
+public func ResetMaxSpeedModifier() -> Void {
+  this.SetMaxSpeedModifier(0.00);
+}
+
+@addMethod(PlayerPuppet)
+protected func AddDefaultMaxSpeed() -> Void {
+  this.AddStatModifier(RPGManager.CreateStatModifier(gamedataStatType.MaxSpeed, gameStatModifierType.Additive, this.m_movementState.GetDefaultSpeed()));
+}
+
+@addMethod(PlayerPuppet)
+protected func RemoveDefaultMaxSpeed() -> Void {
+  this.RemoveStatModifier(RPGManager.CreateStatModifier(gamedataStatType.MaxSpeed, gameStatModifierType.Additive, this.m_movementState.GetDefaultSpeed()));
+}
+
+@addMethod(PlayerPuppet)
+protected func GetDetailedLocomotionState() -> gamePSMDetailedLocomotionStates {
+  let defs = GetAllBlackboardDefs();
+  let blackboard = this.GetPlayerStateMachineBlackboard();
+  let int = blackboard.GetInt(defs.PlayerStateMachine.LocomotionDetailed);
+
+  return IntEnum<gamePSMDetailedLocomotionStates>(int);
+}
+
+
+// ---
+// LOGIC
+// ---
 
 @addMethod(PlayerPuppet)
 protected func InitializeStatModifiers() -> Void {
@@ -35,7 +149,7 @@ protected func InitializeStatModifiers() -> Void {
     return;
   }
 
-  this.m_baseSpeedStat = RPGManager.CreateStatModifier(gamedataStatType.MaxSpeed, gameStatModifierType.Additive, this.m_maxSpeedValue);
+  this.m_baseSpeedStat = RPGManager.CreateStatModifier(gamedataStatType.MaxSpeed, gameStatModifierType.Additive, this.m_baseSpeedValue);
   this.m_speedModifierStat = RPGManager.CreateStatModifier(gamedataStatType.MaxSpeed, gameStatModifierType.Additive, this.m_speedModifierValue);
 
   this.AddStatModifier(this.m_baseSpeedStat);
@@ -61,10 +175,14 @@ protected func UninitializeStatModifiers() -> Void {
 
 @wrapMethod(PlayerPuppet)
 protected cb func OnGameAttached() -> Bool {
+  let config = Config.GetInstance();
+
+  this.m_isClothingModifierEnabled = config.IsClothModifierEnabled();
   this.m_statsSystem = this.GetGame().GetStatsSystem();
   this.m_ownerID = Cast<StatsObjectID>(this.GetEntityID());
+  this.m_clothingModifiers = GetClothingModifiers();
 
-  if Config.GetInstance().IsEnabled() {
+  if config.IsEnabled() {
     this.InitializeStatModifiers();
   }
   
@@ -77,6 +195,10 @@ protected cb func OnDetach() -> Bool {
     this.UninitializeStatModifiers();
   }
 
+  for modifier in this.m_clothingModifiers {
+    modifier.NullRef();
+  }
+
   this.m_movementState = null;
   this.m_statsSystem = null;
   
@@ -84,103 +206,36 @@ protected cb func OnDetach() -> Bool {
 }
 
 @addMethod(PlayerPuppet)
-public func AddStatModifier(modifier: ref<gameStatModifierData>) -> Void {
-  this.m_statsSystem.AddModifier(this.m_ownerID, modifier);
-}
-
-@addMethod(PlayerPuppet)
-public func RemoveStatModifier(modifier: ref<gameStatModifierData>) -> Void {
-  this.m_statsSystem.RemoveModifier(this.m_ownerID, modifier);
-}
-
-@addMethod(PlayerPuppet)
-private func GetRecordMaxSpeedValue() -> Float {
-  let modifierRecordID: TweakDBID = TDBID.Create(this.m_movementState.GetTweakDBName());
-  let modifierRecord: ref<StatModifierGroup_Record> = TweakDBInterface.GetRecord(modifierRecordID) as StatModifierGroup_Record;
-
-  if !IsDefined(modifierRecord) {
-    return 0.0;
-  }
-
-  let modifiers: array<wref<StatModifier_Record>>;
-  modifierRecord.StatModifiers(modifiers);
-
-  for rawModifier in modifiers {
-    let modifier = rawModifier as ConstantStatModifier_Record;
-    let statTypeEnum = modifier.StatTypeHandle().StatType();
-
-    if Equals(statTypeEnum, gamedataStatType.MaxSpeed) {
-      return modifier.Value();
+public func AddClothingStatModifiers() -> Void {
+  for modifier in this.m_clothingModifiers {
+    if modifier.IsActive() && modifier.IsState(this.m_movementState.GetEnum()) && !this.HasStatModifier(gamedataStatType.MaxSpeed, modifier.modifierType, modifier.value) {
+      this.AddStatModifier(modifier.GetRef());
     }
   }
-
-  return 0.0;
 }
 
 @addMethod(PlayerPuppet)
-protected func AddDefaultMaxSpeedStat() -> Void {
-  this.AddStatModifier(RPGManager.CreateStatModifier(gamedataStatType.MaxSpeed, gameStatModifierType.Additive, this.GetRecordMaxSpeedValue()));
-}
-
-@addMethod(PlayerPuppet)
-protected func RemoveDefaultMaxSpeedStat() -> Void {
-  this.RemoveStatModifier(RPGManager.CreateStatModifier(gamedataStatType.MaxSpeed, gameStatModifierType.Additive, this.GetRecordMaxSpeedValue()));
-}
-
-@addMethod(PlayerPuppet)
-protected final func SetStatModifierData(value: Float, out property: Float, out modifier: ref<gameStatModifierData>) -> Void {
-  if IsDefined(modifier) {
-    this.RemoveStatModifier(modifier);
+public func RemoveClothingStatModifiers() -> Void {
+  for modifier in this.m_clothingModifiers {
+    if modifier.IsActive() {
+      this.RemoveStatModifier(modifier.GetRef());
+    }
   }
-
-  property = value;
-  modifier = RPGManager.CreateStatModifier(gamedataStatType.MaxSpeed, gameStatModifierType.Additive, value);
-
-  this.AddStatModifier(modifier);
-}
-
-@addMethod(PlayerPuppet)
-public func SetMaxSpeed(speed: Float) -> Void {
-  this.SetStatModifierData(speed, this.m_maxSpeedValue, this.m_baseSpeedStat);
-}
-
-@addMethod(PlayerPuppet)
-public func SetMaxSpeedModifier(initialModifier: Float) -> Void {
-  let modifier: Float;
-
-  if initialModifier > 15.0 {
-    modifier = 15.0;
-  } else if initialModifier < -this.m_maxSpeedValue {
-    modifier = -this.m_maxSpeedValue;
-  } else {
-    modifier = initialModifier;
-  }
-
-  this.SetStatModifierData(modifier, this.m_speedModifierValue, this.m_speedModifierStat);
-}
-
-@addMethod(PlayerPuppet)
-public func IncreaseMaxSpeedModifier() -> Void {
-  this.SetMaxSpeedModifier(this.m_speedModifierValue + this.m_wbdConfig.GetModifyAmount());
-}
-
-@addMethod(PlayerPuppet)
-public func DecreaseMaxSpeedModifier() -> Void {
-  this.SetMaxSpeedModifier(this.m_speedModifierValue - this.m_wbdConfig.GetModifyAmount());
-}
-
-@addMethod(PlayerPuppet)
-public func ResetMaxSpeedModifier() -> Void {
-  this.SetMaxSpeedModifier(0.00);
 }
 
 @addMethod(PlayerPuppet)
 protected func SetMovementState(state: MovementState, TDBName: String) -> Void {
   this.m_movementState = MovementStateData.Initialize(state, TDBName);
 
-  if this.m_wbdConfig.IsEnabled() {
-    this.RemoveDefaultMaxSpeedStat();
-    this.SetMaxSpeed(this.m_wbdConfig.GetSpeed(state));
+  if !this.m_wbdConfig.IsEnabled() {
+    return;
+  }
+
+  this.RemoveDefaultMaxSpeed();
+  this.SetMaxSpeed(this.m_wbdConfig.GetSpeed(state));
+  
+  if this.m_isClothingModifierEnabled {
+    this.AddClothingStatModifiers();
   }
 }
 
@@ -191,36 +246,54 @@ protected func ResetMovementState() -> Void {
   if this.m_initializedStats {
     this.RemoveStatModifier(this.m_baseSpeedStat);
   }
+
+  if this.m_isClothingModifierEnabled {
+    this.RemoveClothingStatModifiers();
+  }
 }
 
 @addMethod(PlayerPuppet)
 protected func OnExitModSettingsMenu() -> Void {
   if this.m_wbdConfig.IsEnabled() && !this.m_initializedStats {
-    this.m_maxSpeedValue = this.m_wbdConfig.GetSpeed(this.m_movementState.GetEnum());
+    this.m_baseSpeedValue = this.m_wbdConfig.GetSpeed(this.m_movementState.GetEnum());
 
-    this.RemoveDefaultMaxSpeedStat();
+    this.RemoveDefaultMaxSpeed();
     this.InitializeStatModifiers();
   } else if !this.m_wbdConfig.IsEnabled() && this.m_initializedStats {
     this.UninitializeStatModifiers();
-    this.AddDefaultMaxSpeedStat();
+    this.AddDefaultMaxSpeed();
   }
 
-  if this.m_wbdConfig.IsEnabled() && !IsDefined(this.m_movementState) {
+  if IsDefined(this.m_movementState) && this.m_initializedStats {
     let speed: Float = this.m_wbdConfig.GetSpeed(this.m_movementState.GetEnum());
 
-    if !Equals(speed, this.m_maxSpeedValue) {
+    if !Equals(speed, this.m_baseSpeedValue) {
       this.SetMaxSpeed(speed);
     }
+  }
+
+  if this.m_wbdConfig.IsClothModifierEnabled() && !this.m_isClothingModifierEnabled {
+    this.m_isClothingModifierEnabled = true;
+    this.AddClothingStatModifiers();
+  } else if !this.m_wbdConfig.IsClothModifierEnabled() && this.m_isClothingModifierEnabled {
+    this.m_isClothingModifierEnabled = false;
+    this.RemoveClothingStatModifiers();
   }
 }
 
 @addMethod(PlayerPuppet)
-protected func GetDetailedLocomotionState() -> gamePSMDetailedLocomotionStates {
-  let defs = GetAllBlackboardDefs();
-  let blackboard = this.GetPlayerStateMachineBlackboard();
-  let int = blackboard.GetInt(defs.PlayerStateMachine.LocomotionDetailed);
+protected func ActivateClothingModifier(modifier: ref<ClothingModifier>, added: Bool) -> Void {
+  modifier.SetActive(added);
 
-  return IntEnum<gamePSMDetailedLocomotionStates>(int);
+  if !this.m_isClothingModifierEnabled || !modifier.IsState(this.m_movementState.GetEnum()) {
+    return;
+  }
+
+  if added {
+    this.AddStatModifier(modifier.GetRef());
+  } else {
+    this.RemoveStatModifier(modifier.GetRef());
+  }
 }
 
 @addMethod(PlayerPuppet)
@@ -230,7 +303,7 @@ protected func PrintMaxSpeedStat() -> Void {
   for type in types {
     if Equals(type.statType, gamedataStatType.MaxSpeed) {
       FTLog(s"state: \(!this.m_movementState.IsValid() ? ToString(this.GetDetailedLocomotionState()) : ToString(this.m_movementState.GetEnum()))");
-      FTLog(s"max speed: \(this.m_maxSpeedValue)");
+      FTLog(s"max speed: \(this.m_baseSpeedValue)");
       FTLog(s"stat type: \(type.statType)");
       FTLog(s"value: \(type.value)");
     
@@ -240,6 +313,11 @@ protected func PrintMaxSpeedStat() -> Void {
     }
   }
 }
+
+
+// ---
+// EVENTS
+// ---
 
 @wrapMethod(PlayerPuppet)
 protected cb func OnAction(action: ListenerAction, consumer: ListenerActionConsumer) -> Bool {
@@ -273,4 +351,35 @@ protected final func SwitchMenu(menuName: CName, opt userData: ref<IScriptable>,
   }
 
   wrappedMethod(menuName, userData, context);
+}
+
+@addMethod(PlayerPuppet)
+protected func OnItemModifiedFromSlot(id: ItemID, added: Bool) -> Void {
+  let itemRecord: ref<Item_Record> = TweakDBInterface.GetItemRecord(ItemID.GetTDBID(id));
+  let itemCategory = itemRecord.ItemCategory();
+
+  if IsDefined(itemCategory) && Equals(itemCategory.Type(), gamedataItemCategory.Clothing) {
+    let itemName: String = StrLower(ToString(itemRecord.EntityName()));
+    let appearanceName: String = StrLower(ToString(itemRecord.AppearanceName()));
+
+    for modifier in this.m_clothingModifiers {
+      if modifier.Is(itemName) || modifier.Is(appearanceName) {
+        this.ActivateClothingModifier(modifier, added);
+      }
+    }
+  }
+}
+
+@wrapMethod(PlayerPuppet)
+protected cb func OnItemAddedToSlot(event: ref<ItemAddedToSlot>) -> Bool {
+  this.OnItemModifiedFromSlot(event.GetItemID(), true);
+
+  return wrappedMethod(event);
+}
+
+@wrapMethod(PlayerPuppet)
+protected cb func OnItemRemovedFromSlot(event: ref<ItemRemovedFromSlot>) -> Bool {
+  this.OnItemModifiedFromSlot(event.GetItemID(), false);
+
+  return wrappedMethod(event);
 }

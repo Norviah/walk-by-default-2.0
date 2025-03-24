@@ -22,6 +22,13 @@ public class Config extends ScriptableService {
   @runtimeProperty("ModSettings.mod", "Walk by Default 2.0")
   @runtimeProperty("ModSettings.category", "WalkByDefault-Config-General")
   @runtimeProperty("ModSettings.category.order", "1")
+  @runtimeProperty("ModSettings.displayName", "WalkByDefault-Config-General-ClotheModifier-DisplayName")
+  @runtimeProperty("ModSettings.description", "WalkByDefault-Config-General-ClotheModifier-Description")
+  private let clothModifier: Bool = false;
+
+  @runtimeProperty("ModSettings.mod", "Walk by Default 2.0")
+  @runtimeProperty("ModSettings.category", "WalkByDefault-Config-General")
+  @runtimeProperty("ModSettings.category.order", "1")
   @runtimeProperty("ModSettings.displayName", "WalkByDefault-Config-General-ToggleStateInCombat-DisplayName")
   @runtimeProperty("ModSettings.description", "WalkByDefault-Config-General-ToggleStateInCombat-Description")
   private let toggleWalkingStateWithCombat: Bool = false;
@@ -141,6 +148,10 @@ public class Config extends ScriptableService {
 
   public func IsEnabled() -> Bool {
     return this.isEnabled;
+  }
+
+  public func IsClothModifierEnabled() -> Bool {
+    return this.isEnabled && this.clothModifier;
   }
 
   public func IsPersistSystemEnabled() -> Bool {

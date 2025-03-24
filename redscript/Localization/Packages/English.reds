@@ -11,6 +11,8 @@ public class English extends ModLocalizationPackage {
     this.Text("WalkByDefault-Config-General-Enable-Description",                "Whether to enable the mod.");
     this.Text("WalkByDefault-Config-General-PersistSystem-DisplayName",         "Persist System");
     this.Text("WalkByDefault-Config-General-PersistSystem-Description",         "Prevents the game from disabling the walking state.");
+    this.Text("WalkByDefault-Config-General-ClotheModifier-DisplayName",        "Clothe Modifier");
+    this.Text("WalkByDefault-Config-General-ClotheModifier-Description",        "Whether if clothes should modify your movement speed (must manually edit the code to specify which clothes).");
     this.Text("WalkByDefault-Config-General-ToggleStateInCombat-DisplayName",   "Toggle Walking State with Combat");
     this.Text("WalkByDefault-Config-General-ToggleStateInCombat-Description",   "Disables/enables the walking state when entering/exiting combat, this should only be enabled if the movement speed are vanilla values, i.e. the walking state's speed is slow.");
     this.Text("WalkByDefault-Config-General-PreserveSpeedInScenes-DisplayName", "Preserve Movement Speed in Scenes");
