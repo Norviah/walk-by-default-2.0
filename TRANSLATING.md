@@ -51,12 +51,5 @@ To test the translation, do a clean start of the game and set the language to
 the one you translated to. Once in-game, the mod's settings and the popup
 menu should now reflect your translation.
 
-### Pushing the Translation
-
-Once you are done translating, create a pull request with your changes and I'll
-update the mod with your translation. Feel free to add your nexusmod's username
-in the message so I can credit you in the update.
-
-If I take more than a few days to accept your translation and update the mod,
-feel free to message me on Discord (my username is `norviah`) or on NexusMods to
-remind me.
+Once you are done, feel free to create a new mod page on NexusMods for your
+translation.
