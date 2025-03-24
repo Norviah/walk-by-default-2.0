@@ -1,3 +1,25 @@
+## [v2.2.0](https://github.com/Norviah/walk-by-default-2.0/compare/v2.1.1...v2.2.0) (2025-03-23)
+
+### Features
+
+- add clothe modifier system <code>[4c4cb95](https://github.com/Norviah/walk-by-default-2.0/commit/4c4cb95756e61ac8b1753b65180c60bb386f70f4)</code>
+
+- save a reference when modifying the player's speed stat <code>[3e33fc5](https://github.com/Norviah/walk-by-default-2.0/commit/3e33fc5a7f0f9109172e18cf59283c784bf46bb0)</code>
+
+- added the ability to edit movement speed for swimming and fast swimming <code>[a2950ff](https://github.com/Norviah/walk-by-default-2.0/commit/a2950ff4bb41937b2f6463cdbcdc98a8855662cc)</code>
+
+- **debug**: first infer the player's state from the property then from the blackboard <code>[b0df1f9](https://github.com/Norviah/walk-by-default-2.0/commit/b0df1f903e950156d71e73cee560a6fea2e03c21)</code>
+
+### Bug Fixes
+
+- reset the player's movement state when toggling the walk state <code>[88a9f29](https://github.com/Norviah/walk-by-default-2.0/commit/88a9f29f41bc305351548a8044893c7ca6a10afa)</code>
+
+- set the player's detailed state to `Stand` when entering the walk state <code>[7ba457a](https://github.com/Norviah/walk-by-default-2.0/commit/7ba457ae6036a8d32336640745e45605693b0327)</code>
+
+### Refactor
+
+- restructure code into sections <code>[8687473](https://github.com/Norviah/walk-by-default-2.0/commit/8687473146c3b736b26a67a4056e46d78e614e07)</code>
+
 ## [v2.1.1](https://github.com/Norviah/walk-by-default-2.0/compare/v2.1.0...v2.1.1) (2025-03-08)
 
 ### Features
